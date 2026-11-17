@@ -1,0 +1,265 @@
+/* BarKit visual theme — Retro × Minimal × Utility
+   Colors and component styling only (layout lives in app.css). Bootstrap's own CSS
+   variables are re-pointed at the palette, plus the few component colors Bootstrap
+   compiles in as fixed values (primary buttons, focus rings, checked boxes). */
+
+/* ---------- Palette ---------- */
+:root, [data-bs-theme="light"] {
+  --bk-bg: #F0EDE5;        /* cream paper (lightened from #EAE4D5) */
+  --bk-surface: #FAF9F5;   /* light cream: cards, panels */
+  --bk-field: #FFFFFF;     /* input panels */
+  --bk-primary: #75836A;   /* olive */
+  --bk-primary-rgb: 117, 131, 106;
+  --bk-primary-dark: #5F6C55;
+  --bk-accent: #C77B52;    /* retro orange, used sparingly */
+  --bk-dark: #3B3E35;      /* deep olive gray */
+  --bk-dark-rgb: 59, 62, 53;
+  --bk-line: #DDD7C8;      /* thin rules and borders */
+  --bk-tray: #F4F1EA;      /* recessed areas (input labels, canvas stage) */
+  --bk-key-shadow: 0 1px 2px rgba(56, 59, 50, .10), 0 2px 6px rgba(56, 59, 50, .07);  /* soft key lift */
+  --bk-key-shadow-pressed: 0 1px 1px rgba(56, 59, 50, .08);
+  --bk-danger: #B04A3A;
+  --bk-danger-rgb: 176, 74, 58;
+
+  --bs-body-bg: var(--bk-surface);
+  --bs-body-bg-rgb: 250, 249, 245;
+  --bs-body-color: var(--bk-dark);
+  --bs-body-color-rgb: var(--bk-dark-rgb);
+  --bs-emphasis-color: #23251F;
+  --bs-secondary-color: rgba(56, 59, 50, .68);
+  --bs-tertiary-color: rgba(56, 59, 50, .45);
+  --bs-secondary-bg: #EFEBE1;
+  --bs-tertiary-bg: var(--bk-tray);
+  --bs-tertiary-bg-rgb: 244, 241, 234;
+  --bs-border-color: var(--bk-line);
+  --bs-border-color-translucent: rgba(56, 59, 50, .16);
+  --bs-border-radius: .3rem;
+  --bs-border-radius-sm: .2rem;
+  --bs-border-radius-lg: .4rem;
+  --bs-border-radius-xl: .5rem;
+  --bs-border-radius-xxl: .6rem;
+  --bs-primary: var(--bk-primary);
+  --bs-primary-rgb: var(--bk-primary-rgb);
+  --bs-primary-text-emphasis: #4B5643;
+  --bs-primary-bg-subtle: #E2E6DA;
+  --bs-primary-border-subtle: #BCC5B2;
+  --bs-success: #5E7A4E;
+  --bs-success-rgb: 94, 122, 78;
+  --bs-danger: var(--bk-danger);
+  --bs-danger-rgb: var(--bk-danger-rgb);
+  --bs-danger-text-emphasis: #87372B;
+  --bs-danger-bg-subtle: #F2E0D6;
+  --bs-danger-border-subtle: #DDB2A2;
+  --bs-link-color: var(--bk-primary-dark);
+  --bs-link-color-rgb: 95, 108, 85;
+  --bs-link-hover-color: var(--bk-dark);
+  --bs-link-hover-color-rgb: var(--bk-dark-rgb);
+  --bs-focus-ring-color: rgba(var(--bk-primary-rgb), .3);
+  /* Faint paper grain for the page background */
+  --bk-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.22 0 0 0 0 0.23 0 0 0 0 0.2 0 0 0 .03 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+[data-bs-theme="dark"] {
+  --bk-bg: #23251F;
+  --bk-surface: #2C2F27;
+  --bk-field: #24271F;
+  --bk-primary: #9DAA8F;
+  --bk-primary-rgb: 157, 170, 143;
+  --bk-primary-dark: #B6C1A9;
+  --bk-accent: #D9935F;
+  --bk-dark: #DCD6C5;
+  --bk-dark-rgb: 220, 214, 197;
+  --bk-line: #4A4E41;
+  --bk-tray: #26291F;
+  --bk-key-shadow: 0 1px 2px rgba(0, 0, 0, .25), 0 2px 6px rgba(0, 0, 0, .18);
+  --bk-key-shadow-pressed: 0 1px 1px rgba(0, 0, 0, .2);
+  --bk-danger: #D9765F;
+  --bk-danger-rgb: 217, 118, 95;
+
+  --bs-body-bg: var(--bk-surface);
+  --bs-body-bg-rgb: 44, 47, 39;
+  --bs-body-color: var(--bk-dark);
+  --bs-body-color-rgb: var(--bk-dark-rgb);
+  --bs-emphasis-color: #EAE5D7;
+  --bs-secondary-color: rgba(220, 214, 197, .66);
+  --bs-tertiary-color: rgba(220, 214, 197, .45);
+  --bs-secondary-bg: #3A3D33;
+  --bs-tertiary-bg: var(--bk-tray);
+  --bs-tertiary-bg-rgb: 38, 41, 31;
+  --bs-border-color: var(--bk-line);
+  --bs-border-color-translucent: rgba(220, 214, 197, .14);
+  --bs-primary: var(--bk-primary);
+  --bs-primary-rgb: var(--bk-primary-rgb);
+  --bs-primary-text-emphasis: #C9D2BE;
+  --bs-primary-bg-subtle: #343A2E;
+  --bs-primary-border-subtle: #56604C;
+  --bs-success: #9DB58C;
+  --bs-success-rgb: 157, 181, 140;
+  --bs-danger: var(--bk-danger);
+  --bs-danger-rgb: var(--bk-danger-rgb);
+  --bs-danger-text-emphasis: #EBA592;
+  --bs-danger-bg-subtle: #3D2A24;
+  --bs-danger-border-subtle: #7A4537;
+  --bs-link-color: var(--bk-primary-dark);
+  --bs-link-color-rgb: 182, 193, 169;
+  --bs-link-hover-color: var(--bk-dark);
+  --bs-link-hover-color-rgb: var(--bk-dark-rgb);
+  --bs-focus-ring-color: rgba(var(--bk-primary-rgb), .35);
+  --bk-grain: none;
+}
+
+/* ---------- Page ---------- */
+body.bg-body-tertiary { background: var(--bk-grain), var(--bk-bg) !important; }
+
+/* Technical text (numbers, codes, tags) in the OCR-B / monospace face */
+/* (only on Latin/number-only text: OCR-B has no CJK glyphs) */
+.bk-tag, .bk-brand, #posInput, #pos, .grid-head {
+  font-family: "OCR-B", var(--bs-font-monospace);
+}
+
+/* Brand mark: barcode stripes + name + small tag */
+.bk-brand { display: flex; align-items: center; gap: .5rem; font-size: 1.05rem; font-weight: 700;
+  letter-spacing: .04em; color: var(--bk-dark); line-height: 1; }
+.bk-bars { width: 22px; height: 16px;
+  background: linear-gradient(90deg, var(--bk-dark) 0 2px, transparent 2px 4px, var(--bk-dark) 4px 5px,
+    transparent 5px 7px, var(--bk-dark) 7px 10px, transparent 10px 11px, var(--bk-dark) 11px 12px,
+    transparent 12px 14px, var(--bk-accent) 14px 17px, transparent 17px 18px, var(--bk-dark) 18px 19px,
+    transparent 19px 20px, var(--bk-dark) 20px 22px); }
+
+/* Module number tag ("INPUT 01"): a small label sticker */
+.bk-tag { display: inline-block; padding: .15rem .4rem .1rem; vertical-align: .1em;
+  font-size: .625rem; font-weight: 400; letter-spacing: .08em; line-height: 1.2;
+  color: var(--bk-accent); border: 1px solid currentColor; border-radius: 2px; }
+.bk-brand .bk-tag { color: var(--bs-secondary-color); border-style: dashed; }
+
+/* ---------- Cards: modular compartments ---------- */
+.card { --bs-card-bg: var(--bk-surface); --bs-card-border-color: var(--bk-line); --bs-card-border-radius: .4rem;
+  --bs-card-inner-border-radius: calc(.4rem - 1px); }
+.card h2 { letter-spacing: .02em; }
+/* Module number (data-tag) stuck on each card's top edge, like a label sticker */
+.bk-module::before { content: attr(data-tag); position: absolute; left: 1rem; top: 0; transform: translateY(-50%); z-index: 1;
+  padding: .15rem .4rem .1rem; background: var(--bk-surface); border: 1px solid currentColor; border-radius: 2px;
+  font: 400 .625rem/1.2 "OCR-B", var(--bs-font-monospace); letter-spacing: .08em; color: var(--bk-accent); }
+/* Group titles inside the modules: a thin dashed rule after the text */
+.card .text-body-secondary.fw-semibold.small { display: flex; align-items: center; gap: .5rem;
+  letter-spacing: .06em; color: var(--bk-dark) !important; }
+.card .text-body-secondary.fw-semibold.small::after { content: ""; flex: 1; border-top: 1px dashed var(--bk-line); }
+.card .text-body-secondary.fw-semibold.small.me-auto { flex: 1; } /* 輸出尺寸: the rule runs up to the unit select */
+/* Room under each group title (incl. the 輸出尺寸 row with its unit select) */
+.card div.text-body-secondary.fw-semibold.small,
+.card .d-flex:has(> .me-auto.fw-semibold) { margin-bottom: .75rem !important; }
+
+/* ---------- Buttons: physical keys ---------- */
+.btn { --bs-btn-border-radius: .3rem; --bs-btn-font-weight: 500; }
+.btn:not(.nav-side):not(.btn-close):not(.dropdown-item) { box-shadow: var(--bk-key-shadow);
+  transition: transform .06s, box-shadow .06s, background-color .15s, border-color .15s, color .15s; }
+.btn:not(.nav-side):not(:disabled):not(.disabled):active,
+.btn-check:checked + .btn { transform: translateY(1px); box-shadow: var(--bk-key-shadow-pressed) !important; }
+.btn:disabled, .btn.disabled { box-shadow: none !important; }
+.btn-primary {
+  --bs-btn-color: #F7F4EB; --bs-btn-bg: var(--bk-primary); --bs-btn-border-color: var(--bk-primary-dark);
+  --bs-btn-hover-color: #F7F4EB; --bs-btn-hover-bg: var(--bk-primary-dark); --bs-btn-hover-border-color: var(--bk-primary-dark);
+  --bs-btn-active-color: #F7F4EB; --bs-btn-active-bg: var(--bk-primary-dark); --bs-btn-active-border-color: var(--bk-primary-dark);
+  --bs-btn-disabled-color: #F7F4EB; --bs-btn-disabled-bg: var(--bk-primary); --bs-btn-disabled-border-color: var(--bk-primary);
+  --bs-btn-focus-shadow-rgb: var(--bk-primary-rgb);
+}
+[data-bs-theme="dark"] .btn-primary { --bs-btn-color: #23251F; --bs-btn-hover-color: #23251F; --bs-btn-active-color: #23251F;
+  --bs-btn-disabled-color: #23251F; }
+.btn-outline-primary {
+  --bs-btn-color: var(--bk-primary-dark); --bs-btn-bg: var(--bk-field); --bs-btn-border-color: var(--bk-primary);
+  --bs-btn-hover-color: #F7F4EB; --bs-btn-hover-bg: var(--bk-primary); --bs-btn-hover-border-color: var(--bk-primary);
+  --bs-btn-active-color: #F9F7F1; --bs-btn-active-bg: var(--bk-primary); --bs-btn-active-border-color: var(--bk-primary);
+  --bs-btn-disabled-color: var(--bk-primary); --bs-btn-disabled-bg: transparent; --bs-btn-disabled-border-color: var(--bk-primary);
+  --bs-btn-focus-shadow-rgb: var(--bk-primary-rgb);
+}
+.btn-outline-secondary {
+  --bs-btn-color: var(--bk-dark); --bs-btn-bg: var(--bk-field); --bs-btn-border-color: var(--bk-line);
+  --bs-btn-hover-color: var(--bk-dark); --bs-btn-hover-bg: var(--bs-secondary-bg); --bs-btn-hover-border-color: var(--bk-line);
+  /* selected (segmented toggles): soft olive tint instead of a heavy dark block */
+  --bs-btn-active-color: var(--bs-primary-text-emphasis); --bs-btn-active-bg: var(--bs-primary-bg-subtle); --bs-btn-active-border-color: var(--bs-primary-border-subtle);
+  --bs-btn-disabled-color: var(--bs-tertiary-color); --bs-btn-disabled-bg: transparent; --bs-btn-disabled-border-color: var(--bk-line);
+  --bs-btn-focus-shadow-rgb: var(--bk-dark-rgb);
+}
+.btn-danger {
+  --bs-btn-color: #fff; --bs-btn-bg: var(--bk-danger); --bs-btn-border-color: var(--bk-danger);
+  --bs-btn-hover-color: #fff; --bs-btn-hover-bg: #963D30; --bs-btn-hover-border-color: #963D30;
+  --bs-btn-active-bg: #963D30; --bs-btn-active-border-color: #963D30; --bs-btn-focus-shadow-rgb: var(--bk-danger-rgb);
+}
+.btn-outline-danger {
+  --bs-btn-color: var(--bk-danger); --bs-btn-border-color: var(--bk-danger); --bs-btn-bg: transparent;
+  --bs-btn-hover-color: #fff; --bs-btn-hover-bg: var(--bk-danger); --bs-btn-hover-border-color: var(--bk-danger);
+  --bs-btn-active-color: #fff; --bs-btn-active-bg: var(--bk-danger); --bs-btn-active-border-color: var(--bk-danger);
+  --bs-btn-focus-shadow-rgb: var(--bk-danger-rgb);
+}
+/* ‹ › keep their frameless look (declared after the outline-secondary colors above) */
+.btn.nav-side { --bs-btn-bg: transparent; --bs-btn-border-color: transparent; --bs-btn-color: var(--bk-primary);
+  --bs-btn-hover-bg: var(--bk-tray); --bs-btn-hover-border-color: transparent; --bs-btn-hover-color: var(--bk-primary-dark);
+  --bs-btn-active-bg: var(--bs-secondary-bg); --bs-btn-active-border-color: transparent; --bs-btn-active-color: var(--bk-primary-dark);
+  --bs-btn-disabled-bg: transparent; --bs-btn-disabled-border-color: transparent; }
+/* Small inline buttons (前往, 轉為自訂內容) stay flat */
+.btn.py-0 { box-shadow: none !important; transform: none !important; }
+
+/* ---------- Inputs: device input panels ---------- */
+.form-control, .form-select { background-color: var(--bk-field); border-color: var(--bk-line);
+  box-shadow: inset 0 1px 2px rgba(var(--bk-dark-rgb), .07); }
+.form-control:focus, .form-select:focus { background-color: var(--bk-field); border-color: var(--bk-primary);
+  box-shadow: inset 0 1px 2px rgba(var(--bk-dark-rgb), .07), 0 0 0 .2rem rgba(var(--bk-primary-rgb), .25); }
+.form-control::placeholder { color: var(--bs-tertiary-color); }
+.input-group-text { background-color: var(--bk-tray); border-color: var(--bk-line); color: var(--bk-dark); }
+.form-check-input { background-color: var(--bk-field); border-color: #A9A18C; }
+.form-check-input:checked { background-color: var(--bk-primary); border-color: var(--bk-primary); }
+.form-check-input:focus { border-color: var(--bk-primary); box-shadow: 0 0 0 .2rem rgba(var(--bk-primary-rgb), .25); }
+textarea.form-control { font-family: var(--bs-font-monospace); font-size: .95rem; }
+
+/* ---------- Menus, dialogs, progress ---------- */
+.dropdown-menu { --bs-dropdown-bg: var(--bk-surface); --bs-dropdown-border-color: var(--bk-line);
+  --bs-dropdown-link-active-bg: var(--bk-primary); --bs-dropdown-link-hover-bg: var(--bk-tray);
+  --bs-dropdown-box-shadow: 0 .25rem .75rem rgba(var(--bk-dark-rgb), .12); box-shadow: var(--bs-dropdown-box-shadow); }
+.modal-content { background: var(--bk-surface); border: 1px solid var(--bk-line) !important;
+  box-shadow: 0 .5rem 1.5rem rgba(var(--bk-dark-rgb), .18) !important; }
+.progress { --bs-progress-bar-bg: var(--bk-primary); --bs-progress-bg: var(--bk-tray); }
+
+/* ---------- Preview ---------- */
+/* Empty state: an empty tray waiting for input */
+#empty { padding: 2.25rem 3rem 2rem; background: var(--bk-tray); border: 1px dashed var(--bk-line); border-radius: .4rem; }
+#empty::before { content: "READY"; display: block; margin-bottom: .75rem;
+  font: 400 .625rem/1 "OCR-B", var(--bs-font-monospace); letter-spacing: .2em; color: var(--bk-accent); }
+#empty .bi { color: var(--bk-primary); opacity: .8 !important; }
+/* Canvas stage: a recessed tray with a dashed edge; the barcode sits on it like a label */
+.canvas-wrap:not(.is-empty) { background: var(--bk-tray); outline: 1px dashed var(--bk-line); outline-offset: -1px; }
+#out { box-shadow: 0 2px 8px rgba(var(--bk-dark-rgb), .08), 0 0 0 1px rgba(var(--bk-dark-rgb), .06); }
+/* Whole-set tiles: storage compartments */
+.grid-item { background: var(--bk-surface); }
+.grid-thumb { border: 1px dashed var(--bk-line); }
+/* Bottom download bar on phones */
+@media (max-width: 991.98px) {
+  #downloads { background: var(--bk-surface); border-top-color: var(--bk-line); }
+}
+/* Tools above the canvas (download one / copy / print): folder-tab labels sitting on
+   the stage's top edge — flat, thin outline, no key shadow */
+#previewTools { gap: .25rem !important; margin-bottom: -.25rem; margin-right: .75rem; } /* touch the stage, inset from its corner */
+#previewTools .btn { --bs-btn-padding-y: .2rem; --bs-btn-padding-x: .55rem; --bs-btn-font-size: .8rem;
+  --bs-btn-bg: var(--bk-tray); --bs-btn-border-color: var(--bk-line); --bs-btn-color: var(--bk-dark);
+  --bs-btn-hover-bg: var(--bk-surface); --bs-btn-hover-border-color: var(--bk-primary); --bs-btn-hover-color: var(--bk-primary-dark);
+  --bs-btn-active-bg: var(--bk-surface); --bs-btn-active-border-color: var(--bk-primary); --bs-btn-active-color: var(--bk-primary-dark);
+  --bs-btn-disabled-bg: var(--bk-tray); --bs-btn-disabled-border-color: var(--bk-line);
+  border-bottom: 0; border-radius: 3px 3px 0 0; box-shadow: none !important; transform: none !important; }
+
+/* Easier on the eyes in dark mode: the white barcode preview is dimmed a little
+   (display only; downloads and printing are unchanged) */
+[data-bs-theme="dark"] #out, [data-bs-theme="dark"] .grid-thumb { filter: brightness(.86); }
+/* Download buttons: slightly smaller text */
+#downloads .btn { --bs-btn-font-size: .875rem; }
+
+/* ---------- Finishing touches ---------- */
+/* Module titles: a short olive bar in front, like a label on a drawer */
+.card h2.h6 { display: flex; align-items: center; gap: .5rem; font-weight: 700 !important; }
+.card h2.h6::before { content: ""; width: 3px; height: .95em; border-radius: 1px; background: var(--bk-primary); }
+/* Text box: a little more line spacing for lists of codes */
+textarea.form-control { line-height: 1.6; }
+/* Select arrows in the olive tone */
+.form-select { --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%235F6C55' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e"); }
+[data-bs-theme="dark"] .form-select { --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23B6C1A9' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e"); }
+/* Page counter "1 / 2": bold current number */
+#posInput { font-weight: 700; color: var(--bk-dark); }
+/* Smooth color changes on interactive bits */
+.form-control, .form-select, .input-group-text { transition: border-color .15s, box-shadow .15s, background-color .15s; }
