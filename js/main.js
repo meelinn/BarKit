@@ -1,6 +1,7 @@
 // UI wiring and start-up (loaded last)
 // Bootstrap tooltips for icon buttons (title attribute = tooltip text)
-if (window.bootstrap) document.querySelectorAll('.tip').forEach(el => new bootstrap.Tooltip(el, { trigger: 'hover' }));
+// Hover tips only where there is a mouse (on touch screens a tap would leave them stuck open)
+if (window.bootstrap && matchMedia('(hover: hover)').matches) document.querySelectorAll('.tip').forEach(el => new bootstrap.Tooltip(el, { trigger: 'hover' }));
 
 // Feedback on the button that was pressed: for ~2 s it shows ✓ (or ✕ on failure)
 // and a short word; icon-only buttons just swap their icon. Screen readers get the
@@ -94,7 +95,8 @@ document.querySelectorAll('.other-err-go').forEach(b => b.onclick = () => {
   if (others.length) openItem(others[0]);
 });
 
-// One-click fix: remove (or uppercase) unsupported characters in the active inputs
+// One-click fix: remove (or uppercase) unsupported characters. With one item per line only
+// the item on screen is fixed (each bad line on its own); otherwise the whole input
 $('fixBtn').onclick = () => {
   if (needsJoin()) {
     $('value').value = $('value').value.split('\n').map(s => s.trim()).join('');
@@ -102,7 +104,16 @@ $('fixBtn').onclick = () => {
   }
   const fix = fixFor($('format').value);
   if (!fix) return;
-  fixIds().forEach(id => { $(id).value = fix.apply($(id).value); });
+  if ($('modeText').checked && $('multiLine').checked) {
+    const rows = $('value').value.split('\n');
+    let n = -1;
+    const row = rows.findIndex(s => s.trim() && ++n === cur); // the cur-th non-empty line
+    if (row < 0) return;
+    rows[row] = fix.apply(rows[row]);
+    $('value').value = rows.join('\n');
+  } else {
+    fixIds().forEach(id => { $(id).value = fix.apply($(id).value); });
+  }
   render();
 };
 
@@ -189,6 +200,39 @@ const setTheme = t => {
 $('themeLight').checked = document.documentElement.dataset.bsTheme !== 'dark';
 $('themeDark').checked = !$('themeLight').checked;
 document.querySelectorAll('[name="theme"]').forEach(r => r.addEventListener('change', () => setTheme($('themeDark').checked ? 'dark' : 'light')));
+// Main color (top left): retro green, fresh blue or minimal white; remembered.
+// The mascot pictures have a color version per palette (img/<name>-blue.svg …).
+const PALETTES = { paletteGreen: 'green', paletteBlue: 'blue', paletteWhite: 'white' };
+function applyPalette(p) {
+  p === 'green' ? delete document.documentElement.dataset.bkPalette : (document.documentElement.dataset.bkPalette = p);
+  document.querySelectorAll('img[data-pal]').forEach(img => {
+    img.src = `img/${img.dataset.pal}${p === 'green' ? '' : '-' + p}.svg`;
+  });
+}
+const currentPalette = document.documentElement.dataset.bkPalette || 'green';
+Object.entries(PALETTES).forEach(([id, p]) => {
+  $(id).checked = p === currentPalette;
+  $(id).addEventListener('change', () => {
+    applyPalette(p);
+    try { localStorage.setItem('barcode-maker-palette', p); } catch {}
+  });
+});
+applyPalette(currentPalette);
+// Phones: only the current swatch and the current day/night button show (CSS);
+// tapping it switches to the next choice
+const isPhone = matchMedia('(max-width: 575.98px)');
+const cycleOnTap = name => {
+  const radios = [...document.querySelectorAll(`[name="${name}"]`)];
+  radios.forEach((r, i) => document.querySelector(`label[for="${r.id}"]`).addEventListener('click', e => {
+    if (!isPhone.matches || !r.checked) return;
+    e.preventDefault();
+    const next = radios[(i + 1) % radios.length];
+    next.checked = true;
+    next.dispatchEvent(new Event('change', { bubbles: true }));
+  }));
+};
+cycleOnTap('palette');
+cycleOnTap('theme');
 
 // Jump to the typed item (Enter or leaving the field); out-of-range is clamped
 const jumpTo = () => {

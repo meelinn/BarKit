@@ -207,8 +207,7 @@ function renderGrid(list, o, badTotal = 0) {
   grid.replaceChildren();
   const el = (tag, cls, text) => Object.assign(document.createElement(tag), { className: cls, textContent: text || '' });
   let shown = 0;
-  const sentinel = el('div', 'small text-body-secondary text-center py-2');
-  sentinel.style.gridColumn = '1 / -1';
+  const sentinel = el('div', 'grid-span small text-body-secondary text-center py-2');
   const addBatch = () => {
     list.slice(shown, shown + GRID_MAX).forEach((v, j) => addItem(v, shown + j));
     shown = Math.min(list.length, shown + GRID_MAX);
@@ -323,8 +322,8 @@ function updateDownloadAll(list) {
 // Preview size: automatically as large as fits the preview area (display only;
 // downloads keep the real size). The barcode never scrolls; FILL of the width at most,
 // capped at MAX_ZOOM so short barcodes don't become huge.
-const MAX_ZOOM = 2.5;
-const FILL = 0.9; // share of the free width the barcode may take
+const MAX_ZOOM = 2;
+const FILL = 0.82; // share of the free width / height the barcode may take
 
 // Space left for the barcode inside the canvas box (height is Infinity on phones,
 // or when the window is too short to measure a sensible height)
@@ -370,7 +369,7 @@ let setDims = null;
 
 // Each barcode is zoomed to fit on its own (FILL of the width, all of the height,
 // at most MAX_ZOOM), so a long item doesn't make the short ones small
-const fitZoom = (w, h, A) => Math.max(0.1, Math.min(MAX_ZOOM, A.availW * FILL / w, A.availH / h));
+const fitZoom = (w, h, A) => Math.max(0.1, Math.min(MAX_ZOOM, A.availW * FILL / w, A.availH * FILL / h));
 // The canvas box is the largest of those shown sizes, so it keeps one size (and the
 // ‹ › stay put) while switching items
 function setBox(A) {
@@ -383,7 +382,8 @@ function setBox(A) {
 // Size the canvas box (the ‹ › beside it are laid out by CSS grid)
 function applyZoom() {
   const wrap = $('canvasWrap');
-  out.style.width = out.style.height = out.style.maxWidth = '';
+  out.style.width = out.style.height = '';
+  out.classList.remove('zoomed');
   wrap.style.width = wrap.style.height = wrap.style.minHeight = '';
   const A = availSpace(), box = setBox(A);
   const w = parseFloat(out.getAttribute('width')), h = parseFloat(out.getAttribute('height'));
@@ -402,7 +402,7 @@ function applyZoom() {
   const z = fitZoom(w, h, A);
   out.style.width = `${w * z}px`;
   out.style.height = `${h * z}px`;
-  out.style.maxWidth = 'none';
+  out.classList.add('zoomed'); // the computed size wins over max-width: 100%
   if (box) {
     wrap.style.width = `${Math.max(box.w, w * z) + 32}px`; // + canvas padding
     wrap.style.height = `${Math.max(box.h, h * z) + 32}px`;
@@ -438,6 +438,12 @@ function syncButtons() {
   $('selPrint').disabled = !n || pickedBad;
 }
 
+// Light colors (near white) would vanish into the white field: their picker gets an outline
+const isLight = hex => {
+  const [r, g, b] = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
+  return .299 * r + .587 * g + .114 * b > 225;
+};
+
 let validateTimer;
 
 function render() {
@@ -454,6 +460,7 @@ function render() {
   // Hex fields mirror the color pickers (left alone while being typed in)
   COLOR_PAIRS.forEach(([c, h]) => {
     if (document.activeElement !== $(h)) $(h).value = $(c).value;
+    $(c).classList.toggle('is-light', isLight($(c).value)); // outline light colors only
   });
   $('backgroundHex').disabled = $('transparent').checked;
 
@@ -500,10 +507,8 @@ function render() {
   $('previewBox').hidden = empty;
   // copy/print need a valid barcode; invisible (not removed) so the canvas doesn't jump up
   $('previewTools').classList.toggle('invisible', errState);
-  // In the error state the buttons are invisible but keep their space, so the
-  // canvas stays where it was
+  // Download buttons stay in place in the error state (syncButtons disables them)
   $('downloads').hidden = empty;
-  $('downloads').classList.toggle('invisible', errState);
   $('canvasWrap').classList.toggle('is-empty', errState);
   // The top row always keeps its height (just invisible with one item), so the
   // preview size is the same whether or not the single/all toggle is shown
@@ -564,7 +569,8 @@ function render() {
   // keeps the same size when a second item is added
   $('nav').classList.toggle('invisible', list.length < 2);
   ['prev', 'next'].forEach(id => $(id).classList.toggle('invisible', list.length < 2));
-  $('pos').textContent = `/ ${list.length}`;
+  // "/" and the total as separate parts, so the gap between them is set in CSS
+  $('pos').replaceChildren('/', Object.assign(document.createElement('span'), { className: 'pos-total', textContent: list.length }));
   if (document.activeElement !== $('posInput')) $('posInput').value = cur + 1;
   $('posInput').max = list.length;
   $('prev').disabled = cur === 0;

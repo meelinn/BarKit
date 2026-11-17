@@ -18,12 +18,22 @@
 <div class="container py-3 py-lg-4 d-print-none">
   <div class="mb-3 d-flex align-items-center justify-content-between">
     <!-- Brand mark (decorative; the page title for screen readers is the h1 below) -->
-    <div class="bk-brand" aria-hidden="true"><span class="bk-bars"></span>BarKit<span class="bk-tag">TOOLBOX</span></div>
+    <div class="bk-brand" aria-hidden="true"><span class="bk-bars"></span><span>BarK<span class="bk-i">i</span>t</span><span class="bk-tag">TOOLBOX</span></div>
+    <!-- Theme color (the swatches are the buttons), next to the day/night switch -->
+    <div class="bk-palette d-flex align-items-center gap-2 ms-auto me-2 me-sm-0" role="radiogroup" aria-label="主題色">
+      <input type="radio" class="btn-check" name="palette" id="paletteGreen" checked>
+      <label class="bk-swatch bk-swatch-green tip" data-bs-placement="bottom" for="paletteGreen" title="復古綠" aria-label="復古綠"></label>
+      <input type="radio" class="btn-check" name="palette" id="paletteBlue">
+      <label class="bk-swatch bk-swatch-blue tip" data-bs-placement="bottom" for="paletteBlue" title="清爽藍" aria-label="清爽藍"></label>
+      <input type="radio" class="btn-check" name="palette" id="paletteWhite">
+      <label class="bk-swatch bk-swatch-white tip" data-bs-placement="bottom" for="paletteWhite" title="極簡白" aria-label="極簡白"></label>
+    </div>
+    <div class="vr d-none d-sm-block mx-3"></div>
     <div class="btn-group btn-group-sm" role="group" aria-label="日夜模式">
       <input type="radio" class="btn-check" name="theme" id="themeLight">
-      <label class="tip btn btn-outline-secondary" for="themeLight" title="日間模式" aria-label="日間模式"><i class="bi bi-sun"></i></label>
+      <label class="tip btn btn-outline-secondary" data-bs-placement="bottom" for="themeLight" title="日間模式" aria-label="日間模式"><i class="bi bi-sun"></i></label>
       <input type="radio" class="btn-check" name="theme" id="themeDark">
-      <label class="tip btn btn-outline-secondary" for="themeDark" title="夜間模式" aria-label="夜間模式"><i class="bi bi-moon-stars"></i></label>
+      <label class="tip btn btn-outline-secondary" data-bs-placement="bottom" for="themeDark" title="夜間模式" aria-label="夜間模式"><i class="bi bi-moon-stars"></i></label>
     </div>
   </div>
   <div class="row g-3">
@@ -104,7 +114,7 @@
         </div>
 
         <div class="only-1d">
-          <div class="small fw-semibold text-body-secondary mb-2">條碼外觀</div>
+          <div class="small fw-semibold text-body-secondary mb-3">條碼外觀</div>
           <!-- Label sits inside each field (prefix), so every option takes one line -->
           <div class="row g-2">
             <div class="col-6"><div class="input-group"><label for="barWidth" class="input-group-text opt-label">線寬</label><input id="barWidth" class="form-control px-2" type="number" min="1" max="6" value="2"><span class="input-group-text px-2">px</span></div></div>
@@ -112,7 +122,7 @@
             <div class="col-6"><div class="input-group"><label for="marginY" class="input-group-text opt-label">上下邊距</label><input id="marginY" class="form-control px-2" type="number" min="0" max="100" value="10"><span class="input-group-text px-2">px</span></div></div>
             <div class="col-6"><div class="input-group"><label for="marginX" class="input-group-text opt-label">左右邊距</label><input id="marginX" class="form-control px-2" type="number" min="0" max="100" value="10"><span class="input-group-text px-2">px</span></div></div>
           </div>
-          <div class="small fw-semibold text-body-secondary mt-3 mb-2">文字</div>
+          <div class="small fw-semibold text-body-secondary mt-4 mb-3">文字</div>
           <div class="row g-2">
             <div class="col-6">
               <div class="input-group">
@@ -130,7 +140,7 @@
         </div>
 
         <div class="only-qr" hidden>
-          <div class="small fw-semibold text-body-secondary mb-2">條碼外觀</div>
+          <div class="small fw-semibold text-body-secondary mb-3">條碼外觀</div>
           <div class="row g-2">
             <div class="col-6">
               <div class="input-group">
@@ -148,7 +158,7 @@
           </div>
         </div>
 
-        <div class="small fw-semibold text-body-secondary mt-3 mb-2">顏色</div>
+        <div class="small fw-semibold text-body-secondary mt-4 mb-3">顏色</div>
         <div class="row g-2">
           <div class="col-6"><div class="input-group"><label for="lineColor" class="input-group-text opt-label">條碼</label><input id="lineColor" class="form-control form-control-color color-swatch" type="color" value="#000000"><input id="lineColorHex" class="form-control px-1 text-center tabular" maxlength="7" aria-label="條碼顏色色碼"></div></div>
           <div class="col-6"><div class="input-group"><label for="background" class="input-group-text opt-label">背景</label><input id="background" class="form-control form-control-color color-swatch" type="color" value="#ffffff"><input id="backgroundHex" class="form-control px-1 text-center tabular" maxlength="7" aria-label="背景顏色色碼"></div></div>
@@ -158,7 +168,7 @@
           <label for="transparent" class="form-check-label">透明背景</label>
         </div>
 
-        <div class="d-flex align-items-center gap-2 mt-3 mb-2">
+        <div class="d-flex align-items-center gap-2 mt-4 mb-3">
           <span class="small fw-semibold text-body-secondary me-auto">輸出尺寸</span>
           <select id="sizeUnit" class="form-select form-select-sm py-0 w-auto" aria-label="尺寸單位" title="px 為畫面像素，1 px = 1/96 英寸，與顯示選項同單位">
             <option value="mm">mm</option>
@@ -186,6 +196,8 @@
 
     <!-- Preview & output: shown first on phones, right on desktop -->
     <div class="col-lg-8 order-1 order-lg-2">
+      <!-- Output card + mascot strip below it (sticky together on desktop) -->
+      <div class="preview-col d-flex flex-column gap-2">
       <div class="card preview-card bk-module" data-tag="OUTPUT 03"><div class="card-body d-flex flex-column gap-3">
         <h1 class="visually-hidden">條碼產生器</h1>
         <div id="topBar" class="d-flex align-items-center gap-2">
@@ -210,9 +222,9 @@
         </div>
         </div>
         <div id="previewArea" class="flex-grow-1 d-flex flex-column align-items-center justify-content-center gap-3">
-          <div id="empty" class="text-center text-body-secondary">
-            <i class="bi bi-upc-scan d-block mb-2 opacity-50 fs-1" aria-hidden="true"></i>
-            <div class="small">輸入內容即可產生條碼</div>
+          <div id="empty" class="text-center text-body-secondary p-5">
+            <i class="bi bi-upc-scan d-block mb-3 display-5 lh-1 text-primary opacity-75" aria-hidden="true"></i>
+            <div>輸入內容即可產生條碼</div>
           </div>
           <!-- Grid: ‹ | toolbar + canvas | › ; "n / N" under the canvas. The arrows span
                from the canvas top to the bottom of the "n / N" line (CSS only) -->
@@ -275,8 +287,15 @@
             </select>
           </div>
           <div id="zipProgress" class="mx-auto mt-2" hidden>
-            <div class="d-flex justify-content-between small text-body-secondary mb-1"><span id="zipLabel">打包中</span><span id="zipCount"></span></div>
-            <div class="progress" role="progressbar" aria-label="打包進度"><div id="zipBar" class="progress-bar"></div></div>
+            <div class="d-flex align-items-center gap-2">
+              <!-- Mascot: making barcodes while packing, holding the finished label when done -->
+              <img id="zipPomLoading" class="bk-pom bk-px" data-pal="pom-loading" src="img/pom-loading.svg" alt="" width="80" height="44">
+              <img id="zipPomDone" class="bk-pom bk-px" data-pal="pom-done" src="img/pom-done.svg" alt="" width="80" height="44" hidden>
+              <div class="flex-grow-1">
+                <div class="d-flex justify-content-between small text-body-secondary mb-1"><span id="zipLabel">打包中</span><span id="zipCount"></span></div>
+                <div class="progress" role="progressbar" aria-label="打包進度"><div id="zipBar" class="progress-bar"></div></div>
+              </div>
+            </div>
           </div>
           </div>
         </div>
@@ -296,6 +315,9 @@
           </div>
         </div>
       </div></div>
+      <!-- Mascot strip outside the output card: works at the computer → sticks the label on a box → naps (decorative) -->
+      <img class="bk-strip d-block w-100 h-auto flex-shrink-0" data-pal="pom-pixel" src="img/pom-pixel.svg" alt="" width="1344" height="72">
+      </div>
     </div>
   </div>
 </div>
@@ -318,7 +340,7 @@
             </div>
           </div>
           <div class="col-sm-7">
-            <div class="small fw-semibold text-body-secondary mb-2">標籤紙</div>
+            <div class="small fw-semibold text-body-secondary mb-3">標籤紙</div>
             <div class="d-flex flex-column gap-2 mb-4">
               <div class="input-group">
                 <label for="printLayout" class="input-group-text opt-label">版型</label>
@@ -342,13 +364,13 @@
                 <span class="input-group-text opt-label">格開始</span>
               </div>
             </div>
-            <div class="small fw-semibold text-body-secondary mb-2">條碼</div>
+            <div class="small fw-semibold text-body-secondary mb-3">條碼</div>
             <div class="input-group mb-4">
               <label for="printFrom" class="input-group-text opt-label">從第</label>
               <input id="printFrom" class="form-control px-2" type="number" min="1" value="1" aria-label="從第幾筆開始印">
               <span class="input-group-text opt-label">筆開始</span>
             </div>
-            <div class="small fw-semibold text-body-secondary mb-2">位置微調</div>
+            <div class="small fw-semibold text-body-secondary mb-3">位置微調</div>
             <div class="row g-2">
               <div class="col-6">
                 <div class="input-group">

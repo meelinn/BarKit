@@ -8,6 +8,7 @@
   display: flex; align-items: center; justify-content: center; /* center a narrower item in the set-sized box */
   background: var(--bs-tertiary-bg); /* soft stage; the barcode sits on it like a card */
 }
+#out.zoomed { max-width: none; }
 #out { display: block; max-width: 100%; height: auto; border-radius: 2px;
   /* checkerboard only behind the barcode itself (shows a transparent background) */
   background: repeating-conic-gradient(#e5e7eb 0 25%, #fff 0 50%) 0 0 / 16px 16px;
@@ -37,8 +38,13 @@
 .preview-main { grid-column: 2; grid-row: 1 / 3; display: grid; grid-template-rows: subgrid; row-gap: .25rem;
   justify-self: center; justify-items: end; max-width: 100%; }
 #nav { grid-column: 2; grid-row: 3; margin-top: .75rem; min-height: 1.3125rem; }
+/* "1 / 4": the number field is as wide as its number (grows for 100, 1000 …);
+   browsers without field-sizing get a fixed width */
 #posInput { width: 4rem; }
-#pos { min-width: 64px; }
+@supports (field-sizing: content) {
+  #posInput { field-sizing: content; width: auto; min-width: 2.75rem; max-width: 6rem;
+    padding-left: .6rem !important; } /* balances the space kept for the up/down arrows */
+}
 /* ‹ ›: no frame, blue icon, a soft background only on hover */
 .nav-side { flex: 0 0 auto; width: 3rem; font-size: 1.25rem;
   --bs-btn-color: var(--bs-primary); --bs-btn-border-color: transparent;
@@ -48,10 +54,11 @@
 
 /* Download buttons and ZIP progress */
 .dl-col { flex: 1 1 0; max-width: 13rem; }
-#zipProgress { max-width: 20.5rem; }
+#zipProgress { max-width: 24rem; }
 #zipProgress .progress { height: .5rem; }
 
 /* ---------- Whole-set view: thumbnail grid, scrolls inside the preview card ---------- */
+.grid-span { grid-column: 1 / -1; } /* full-width row in the thumbnail grid ("載入中…") */
 .grid-view {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: .75rem;
   align-content: start; overflow-y: auto; max-height: 70vh; padding: 2px;
@@ -86,8 +93,12 @@
 /* Labels inside input groups: compact (Bootstrap sets 1rem on .input-group-text) */
 .opt-label { padding-left: .5rem; padding-right: .5rem; font-size: .875rem; }
 .input-group > .color-swatch { flex: 0 0 calc(1.5em + .75rem + 2px); padding: .375rem; }
-input[type="color"]::-webkit-color-swatch { border: 1px solid var(--bs-border-color); border-radius: .25rem; }
-input[type="color"]::-moz-color-swatch { border: 1px solid var(--bs-border-color); border-radius: .25rem; }
+input[type="color"]::-webkit-color-swatch { border: 0; border-radius: .25rem; }
+input[type="color"]::-moz-color-swatch { border: 0; border-radius: .25rem; }
+/* Light colors would vanish into the white field: give them a thin outline
+   (!important: Bootstrap forces border: 0) */
+input[type="color"].is-light::-webkit-color-swatch { border: 1px solid rgba(var(--bk-dark-rgb), .3) !important; }
+input[type="color"].is-light::-moz-color-swatch { border: 1px solid rgba(var(--bk-dark-rgb), .3) !important; }
 #formatHint:empty, #bPreview:empty { display: none; }
 .btn-quiet { --bs-btn-font-size: .75rem; --bs-btn-border-color: var(--bs-border-color); }
 /* 清空內容: quiet like the reset button, turns red on hover */
@@ -135,14 +146,16 @@ input[type="color"]::-moz-color-swatch { border: 1px solid var(--bs-border-color
 }
 /* Desktop: the page scrolls; the preview card sticks and fills the viewport height */
 @media (min-width: 992px) {
-  /* Stick where the card starts (page padding + theme row = 2rem + 31px), so it never
-     slides up and leaves a gap at the bottom while scrolling */
-  .preview-card { position: sticky; top: calc(2rem + 31px); height: calc(100vh - 3.5rem - 31px); }
+  /* Stick where the card starts (page padding + theme row + its margin = 2.5rem + 31px) and end at
+     the page padding (1px spare: the left column can end on a fraction of a pixel), so it never
+     slides while scrolling */
+  .preview-col { position: sticky; top: calc(2.5rem + 31px); height: calc(100vh - 4rem - 32px); }
+  .preview-card { flex: 1 1 auto; min-height: 0; } /* fills the column above the mascot strip */
   .preview-card .card-body { min-height: 0; overflow: hidden; }
-  /* Barcode centered in the space above, downloads at the card bottom; the padding
-     below matches the view toggle row above, so the preview stays centered */
+  /* Barcode centered in the space above, downloads at the card bottom (the mascot
+     strip sits below them) */
   #previewBox { margin-top: auto; }
-  #downloads { margin-top: auto; padding-bottom: 31px; }
+  #downloads { margin-top: auto; }
   .grid-view { flex: 1 1 0; min-height: 0; max-height: none; }
 }
 

@@ -171,11 +171,16 @@ async function downloadAs(ext, one = false) {
   flash(one ? dlOneBtn : $(ext === 'svg' ? 'dlSvg' : 'dlPng'), '已下載', true, `已下載 ${name}`);
 }
 
+// Mascot beside the progress bar: scanning while packing, holding the label when done
+const showZipPom = done => { $('zipPomLoading').hidden = done; $('zipPomDone').hidden = !done; };
+let zipDoneTimer;
 async function downloadZip(ext, list = lines(), btn = $(ext === 'svg' ? 'dlSvg' : 'dlPng')) {
   const o = opts(), zip = new JSZip(), used = new Map();
   let ok = false;
   busy = true;
   syncButtons();
+  clearTimeout(zipDoneTimer);
+  showZipPom(false);
   const progress = (done, label) => {
     $('zipProgress').hidden = false;
     $('zipLabel').textContent = label;
@@ -212,11 +217,17 @@ async function downloadZip(ext, list = lines(), btn = $(ext === 'svg' ? 'dlSvg' 
     download(await zip.generateAsync({ type: 'blob' }), `barcodes-${list.length}.zip`);
     ok = true;
   } finally {
-    $('zipProgress').hidden = true;
+    if (!ok) $('zipProgress').hidden = true;
     busy = false;
     syncButtons();
   }
-  if (ok) flash(btn, '已下載', true, `已下載 ${list.length} 筆 ${ext.toUpperCase()}（ZIP）`);
+  if (!ok) return;
+  flash(btn, '已下載', true, `已下載 ${list.length} 筆 ${ext.toUpperCase()}（ZIP）`);
+  // The mascot holds up the finished label for a moment, then the bar goes away
+  showZipPom(true);
+  $('zipLabel').textContent = '完成';
+  clearTimeout(zipDoneTimer);
+  zipDoneTimer = setTimeout(() => { $('zipProgress').hidden = true; showZipPom(false); }, 2200);
 }
 
 const fail = btn => e => flash(btn, '失敗', false, e.message || String(e));

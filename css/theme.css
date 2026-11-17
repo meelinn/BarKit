@@ -4,18 +4,22 @@
    compiles in as fixed values (primary buttons, focus rings, checked boxes). */
 
 /* ---------- Palette ---------- */
+/* 01 Vintage Green — Retro / Warm (default): olive with a forest-green hover on light cream;
+   retro orange accent */
 :root, [data-bs-theme="light"] {
-  --bk-bg: #F0EDE5;        /* cream paper (lightened from #EAE4D5) */
-  --bk-surface: #FAF9F5;   /* light cream: cards, panels */
-  --bk-field: #FFFFFF;     /* input panels */
-  --bk-primary: #75836A;   /* olive */
+  --bk-bg: #F0EDE5;
+  --bk-surface: #FAF9F5;
+  --bk-field: #FFFFFF;
+  --bk-primary: #75836A;
   --bk-primary-rgb: 117, 131, 106;
-  --bk-primary-dark: #5F6C55;
-  --bk-accent: #C77B52;    /* retro orange, used sparingly */
-  --bk-dark: #3B3E35;      /* deep olive gray */
+  --bk-primary-dark: #4F6B4A;   /* forest green: hover / pressed */
+  --bk-ink: #4F6B4A;
+  --bk-on-primary: #F7F4EB;
+  --bk-accent: #C77B52;
+  --bk-dark: #3B3E35;
   --bk-dark-rgb: 59, 62, 53;
-  --bk-line: #DDD7C8;      /* thin rules and borders */
-  --bk-tray: #F4F1EA;      /* recessed areas (input labels, canvas stage) */
+  --bk-line: #DDD7C8;
+  --bk-tray: #F4F1EA;
   --bk-key-shadow: 0 1px 2px rgba(56, 59, 50, .10), 0 2px 6px rgba(56, 59, 50, .07);  /* soft key lift */
   --bk-key-shadow-pressed: 0 1px 1px rgba(56, 59, 50, .08);
   --bk-danger: #B04A3A;
@@ -26,13 +30,13 @@
   --bs-body-color: var(--bk-dark);
   --bs-body-color-rgb: var(--bk-dark-rgb);
   --bs-emphasis-color: #23251F;
-  --bs-secondary-color: rgba(56, 59, 50, .68);
-  --bs-tertiary-color: rgba(56, 59, 50, .45);
+  --bs-secondary-color: rgba(59, 62, 53, .66);
+  --bs-tertiary-color: rgba(59, 62, 53, .45);
   --bs-secondary-bg: #EFEBE1;
   --bs-tertiary-bg: var(--bk-tray);
   --bs-tertiary-bg-rgb: 244, 241, 234;
   --bs-border-color: var(--bk-line);
-  --bs-border-color-translucent: rgba(56, 59, 50, .16);
+  --bs-border-color-translucent: rgba(59, 62, 53, .13);
   --bs-border-radius: .3rem;
   --bs-border-radius-sm: .2rem;
   --bs-border-radius-lg: .4rem;
@@ -40,7 +44,7 @@
   --bs-border-radius-xxl: .6rem;
   --bs-primary: var(--bk-primary);
   --bs-primary-rgb: var(--bk-primary-rgb);
-  --bs-primary-text-emphasis: #4B5643;
+  --bs-primary-text-emphasis: #4F6B4A;
   --bs-primary-bg-subtle: #E2E6DA;
   --bs-primary-border-subtle: #BCC5B2;
   --bs-success: #5E7A4E;
@@ -50,8 +54,8 @@
   --bs-danger-text-emphasis: #87372B;
   --bs-danger-bg-subtle: #F2E0D6;
   --bs-danger-border-subtle: #DDB2A2;
-  --bs-link-color: var(--bk-primary-dark);
-  --bs-link-color-rgb: 95, 108, 85;
+  --bs-link-color: var(--bk-ink);
+  --bs-link-color-rgb: 79, 107, 74;
   --bs-link-hover-color: var(--bk-dark);
   --bs-link-hover-color-rgb: var(--bk-dark-rgb);
   --bs-focus-ring-color: rgba(var(--bk-primary-rgb), .3);
@@ -65,6 +69,8 @@
   --bk-primary: #9DAA8F;
   --bk-primary-rgb: 157, 170, 143;
   --bk-primary-dark: #B6C1A9;
+  --bk-ink: #B6C1A9;
+  --bk-on-primary: #1E1F1A;
   --bk-accent: #D9935F;
   --bk-dark: #DCD6C5;
   --bk-dark-rgb: 220, 214, 197;
@@ -86,10 +92,10 @@
   --bs-tertiary-bg: var(--bk-tray);
   --bs-tertiary-bg-rgb: 38, 41, 31;
   --bs-border-color: var(--bk-line);
-  --bs-border-color-translucent: rgba(220, 214, 197, .14);
+  --bs-border-color-translucent: rgba(220, 214, 197, .13);
   --bs-primary: var(--bk-primary);
   --bs-primary-rgb: var(--bk-primary-rgb);
-  --bs-primary-text-emphasis: #C9D2BE;
+  --bs-primary-text-emphasis: #B6C1A9;
   --bs-primary-bg-subtle: #343A2E;
   --bs-primary-border-subtle: #56604C;
   --bs-success: #9DB58C;
@@ -99,7 +105,7 @@
   --bs-danger-text-emphasis: #EBA592;
   --bs-danger-bg-subtle: #3D2A24;
   --bs-danger-border-subtle: #7A4537;
-  --bs-link-color: var(--bk-primary-dark);
+  --bs-link-color: var(--bk-ink);
   --bs-link-color-rgb: 182, 193, 169;
   --bs-link-hover-color: var(--bk-dark);
   --bs-link-hover-color-rgb: var(--bk-dark-rgb);
@@ -107,19 +113,147 @@
   --bk-grain: none;
 }
 
+/* 02 Baby Blue — Fresh / Soft: calm glacier blue on white and an ice page with a hint of
+   warmth; the retro orange accent stays */
+:root[data-bk-palette="blue"], [data-bk-palette="blue"][data-bs-theme="light"] {
+  --bk-bg: #EFF2F1;
+  --bk-surface: #FFFFFF;
+  --bk-field: #FFFFFF;
+  --bk-tray: #F4F6F6;
+  --bk-line: #D6DDDF;
+  --bk-dark: #2F3B47;
+  --bk-dark-rgb: 47, 59, 71;
+  --bk-accent: #C77B52;
+  --bk-primary: #5581A2;
+  --bk-primary-rgb: 85, 129, 162;
+  --bk-primary-dark: #477191;
+  --bk-ink: #477191;
+  --bk-on-primary: #FFFFFF;
+  --bs-body-bg-rgb: 255, 255, 255;
+  --bs-secondary-bg: #E7ECEC;
+  --bs-tertiary-bg-rgb: 244, 246, 246;
+  --bs-secondary-color: rgba(47, 59, 71, .66);
+  --bs-tertiary-color: rgba(47, 59, 71, .45);
+  --bs-border-color-translucent: rgba(47, 59, 71, .13);
+  --bs-primary-text-emphasis: #477191;
+  --bs-primary-bg-subtle: #E4EDF3;
+  --bs-primary-border-subtle: #BBCFDF;
+  --bs-link-color-rgb: 71, 113, 145;
+  --bk-grain: none;
+}
+[data-bk-palette="blue"][data-bs-theme="dark"] {
+  --bk-bg: #1B2128;
+  --bk-surface: #222A32;
+  --bk-field: #1E252C;
+  --bk-tray: #20272E;
+  --bk-line: #3B4753;
+  --bk-dark: #E3ECF3;
+  --bk-dark-rgb: 227, 236, 243;
+  --bk-accent: #D9935F;
+  --bs-body-bg-rgb: 34, 42, 50;
+  --bs-secondary-bg: #2D3742;
+  --bs-tertiary-bg-rgb: 32, 39, 46;
+  --bs-secondary-color: rgba(227, 236, 243, .66);
+  --bs-tertiary-color: rgba(227, 236, 243, .45);
+  --bs-border-color-translucent: rgba(227, 236, 243, .13);
+  --bk-primary: #94B8D1;
+  --bk-primary-rgb: 148, 184, 209;
+  --bk-primary-dark: #B3CCDE;
+  --bk-ink: #B3CCDE;
+  --bk-on-primary: #13283C;
+  --bs-primary-text-emphasis: #B3CCDE;
+  --bs-primary-bg-subtle: #2C3A47;
+  --bs-primary-border-subtle: #4B6378;
+  --bs-link-color-rgb: 179, 204, 222;
+}
+[data-bk-palette="blue"] .form-select { --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23426E8E' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e"); }
+[data-bk-palette="blue"][data-bs-theme="dark"] .form-select { --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23A9BFD4' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e"); }
+
+/* 03 Minimal White — Minimal / Modern: pure & mist white, light gray and graphite; the retro
+   orange accent stays */
+:root[data-bk-palette="white"], [data-bk-palette="white"][data-bs-theme="light"] {
+  --bk-bg: #F6F6F6;
+  --bk-surface: #FFFFFF;
+  --bk-field: #FFFFFF;
+  --bk-tray: #F8F8F8;
+  --bk-line: #E4E4E4;
+  --bk-dark: #3A3D42;
+  --bk-dark-rgb: 58, 61, 66;
+  --bk-primary: #4A4D52;
+  --bk-primary-rgb: 74, 77, 82;
+  --bk-primary-dark: #36393E;
+  --bk-ink: #36393E;
+  --bk-on-primary: #FFFFFF;
+  --bs-body-bg-rgb: 255, 255, 255;
+  --bs-secondary-bg: #EDEDED;
+  --bs-tertiary-bg-rgb: 248, 248, 248;
+  --bs-secondary-color: rgba(58, 61, 66, .66);
+  --bs-tertiary-color: rgba(58, 61, 66, .45);
+  --bs-border-color-translucent: rgba(58, 61, 66, .13);
+  --bs-primary-text-emphasis: #36393E;
+  --bs-primary-bg-subtle: #EDEDED;
+  --bs-primary-border-subtle: #C9C9C9;
+  --bs-link-color-rgb: 54, 57, 62;
+  --bk-grain: none;
+  --bk-accent: #C77B52;
+}
+[data-bk-palette="white"][data-bs-theme="dark"] {
+  --bk-bg: #181818;
+  --bk-surface: #222222;
+  --bk-field: #1C1C1C;
+  --bk-tray: #1E1E1E;
+  --bk-line: #3A3A3A;
+  --bk-dark: #E6E6E6;
+  --bk-dark-rgb: 230, 230, 230;
+  --bk-primary: #D6D6D6;
+  --bk-primary-rgb: 214, 214, 214;
+  --bk-primary-dark: #EDEDED;
+  --bk-ink: #EDEDED;
+  --bk-on-primary: #1A1A1A;
+  --bs-body-bg-rgb: 34, 34, 34;
+  --bs-secondary-bg: #2E2E2E;
+  --bs-tertiary-bg-rgb: 30, 30, 30;
+  --bs-secondary-color: rgba(230, 230, 230, .66);
+  --bs-tertiary-color: rgba(230, 230, 230, .45);
+  --bs-border-color-translucent: rgba(230, 230, 230, .13);
+  --bs-primary-text-emphasis: #EDEDED;
+  --bs-primary-bg-subtle: #303030;
+  --bs-primary-border-subtle: #4A4A4A;
+  --bs-link-color-rgb: 237, 237, 237;
+  --bk-accent: #D9935F;
+}
+[data-bk-palette="white"] .form-select { --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2336393E' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e"); }
+[data-bk-palette="white"][data-bs-theme="dark"] .form-select { --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23EDEDED' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e"); }
+
+/* Palette swatches (top left): the colors themselves are the buttons */
+.bk-swatch { width: 16px; height: 16px; border-radius: 50%; cursor: pointer; border: 1px solid rgba(var(--bk-dark-rgb), .2);
+  transition: transform .12s, box-shadow .12s; }
+.bk-swatch:hover { transform: scale(1.12); }
+.bk-swatch-green { background: #75836A; }
+.bk-swatch-blue { background: #86ADC9; }
+.bk-swatch-white { background: #FFFFFF; border-color: #BDBDBD; }
+.btn-check:checked + .bk-swatch { box-shadow: 0 0 0 2px var(--bk-bg), 0 0 0 3.5px var(--bk-dark); }
+.btn-check:focus-visible + .bk-swatch { box-shadow: 0 0 0 2px var(--bk-bg), 0 0 0 4px rgba(var(--bk-primary-rgb), .6); }
+
 /* ---------- Page ---------- */
 body.bg-body-tertiary { background: var(--bk-grain), var(--bk-bg) !important; }
 
 /* Technical text (numbers, codes, tags) in the OCR-B / monospace face */
 /* (only on Latin/number-only text: OCR-B has no CJK glyphs) */
-.bk-tag, .bk-brand, #posInput, #pos, .grid-head {
+.bk-tag, .bk-brand, .grid-head {
   font-family: "OCR-B", var(--bs-font-monospace);
 }
 
 /* Brand mark: barcode stripes + name + small tag */
+/* Phones: one swatch and one day/night button, each tap switches to the next (main.js) */
+@media (max-width: 575.98px) {
+  .bk-palette .btn-check:not(:checked) + .bk-swatch,
+  [name="theme"]:not(:checked) + label { display: none; }
+  [name="theme"] + label { border-radius: var(--bs-btn-border-radius) !important; margin-left: 0 !important; }
+}
 .bk-brand { display: flex; align-items: center; gap: .5rem; font-size: 1.05rem; font-weight: 700;
   letter-spacing: .04em; color: var(--bk-dark); line-height: 1; }
-.bk-bars { width: 22px; height: 16px;
+.bk-bars { width: 22px; height: 10px; align-self: flex-end; margin-bottom: 1px; position: relative;
   background: linear-gradient(90deg, var(--bk-dark) 0 2px, transparent 2px 4px, var(--bk-dark) 4px 5px,
     transparent 5px 7px, var(--bk-dark) 7px 10px, transparent 10px 11px, var(--bk-dark) 11px 12px,
     transparent 12px 14px, var(--bk-accent) 14px 17px, transparent 17px 18px, var(--bk-dark) 18px 19px,
@@ -130,11 +264,24 @@ body.bg-body-tertiary { background: var(--bk-grain), var(--bk-bg) !important; }
   font-size: .625rem; font-weight: 400; letter-spacing: .08em; line-height: 1.2;
   color: var(--bk-accent); border: 1px solid currentColor; border-radius: 2px; }
 .bk-brand .bk-tag { color: var(--bs-secondary-color); border-style: dashed; }
+/* Logo: a tiny pixel Pomeranian peeking over the (shortened) barcode, paws on its edge */
+.bk-bars::before { content: ""; position: absolute; left: 1px; bottom: 8px; width: 20px; height: 14px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 7' shape-rendering='crispEdges'%3E%3Crect x='1' y='0' width='1' height='1' fill='%23BFB5A0'/%3E%3Crect x='2' y='0' width='1' height='1' fill='%23BFB5A0'/%3E%3Crect x='7' y='0' width='1' height='1' fill='%23BFB5A0'/%3E%3Crect x='8' y='0' width='1' height='1' fill='%23BFB5A0'/%3E%3Crect x='0' y='1' width='1' height='1' fill='%23BFB5A0'/%3E%3Crect x='1' y='1' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='2' y='1' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='3' y='1' width='1' height='1' fill='%23BFB5A0'/%3E%3Crect x='6' y='1' width='1' height='1' fill='%23BFB5A0'/%3E%3Crect x='7' y='1' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='8' y='1' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='9' y='1' width='1' height='1' fill='%23BFB5A0'/%3E%3Crect x='0' y='2' width='1' height='1' fill='%23BFB5A0'/%3E%3Crect x='1' y='2' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='3' y='2' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='4' y='2' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='5' y='2' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='6' y='2' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='7' y='2' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='8' y='2' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='9' y='2' width='1' height='1' fill='%23BFB5A0'/%3E%3Crect x='0' y='3' width='1' height='1' fill='%23BFB5A0'/%3E%3Crect x='1' y='3' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='2' y='3' width='1' height='1' fill='%2333362E'/%3E%3Crect x='3' y='3' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='4' y='3' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='5' y='3' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='6' y='3' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='7' y='3' width='1' height='1' fill='%2333362E'/%3E%3Crect x='8' y='3' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='9' y='3' width='1' height='1' fill='%23BFB5A0'/%3E%3Crect x='0' y='4' width='1' height='1' fill='%23BFB5A0'/%3E%3Crect x='1' y='4' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='2' y='4' width='1' height='1' fill='%23EDBFA6'/%3E%3Crect x='3' y='4' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='4' y='4' width='1' height='1' fill='%2333362E'/%3E%3Crect x='5' y='4' width='1' height='1' fill='%2333362E'/%3E%3Crect x='6' y='4' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='7' y='4' width='1' height='1' fill='%23EDBFA6'/%3E%3Crect x='8' y='4' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='9' y='4' width='1' height='1' fill='%23BFB5A0'/%3E%3Crect x='1' y='5' width='1' height='1' fill='%23BFB5A0'/%3E%3Crect x='2' y='5' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='3' y='5' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='4' y='5' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='5' y='5' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='6' y='5' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='7' y='5' width='1' height='1' fill='%23FAF7F0'/%3E%3Crect x='8' y='5' width='1' height='1' fill='%23BFB5A0'/%3E%3Crect x='0' y='6' width='1' height='1' fill='%23BFB5A0'/%3E%3Crect x='1' y='6' width='1' height='1' fill='%23FFFFFF'/%3E%3Crect x='2' y='6' width='1' height='1' fill='%23BFB5A0'/%3E%3Crect x='7' y='6' width='1' height='1' fill='%23BFB5A0'/%3E%3Crect x='8' y='6' width='1' height='1' fill='%23FFFFFF'/%3E%3Crect x='9' y='6' width='1' height='1' fill='%23BFB5A0'/%3E%3C/svg%3E") center / contain no-repeat; image-rendering: pixelated; }
+/* Logo: the dot on the "i" of BarKit is a little orange paw print */
+.bk-i { position: relative; display: inline-block; clip-path: inset(30% -1em 0 -1em); } /* hides the glyph's own dot */
+.bk-brand > span:has(.bk-i) { position: relative; }
+.bk-brand > span:has(.bk-i)::after { content: ""; position: absolute; width: .5em; height: .5em;
+  left: calc(4 * (1ch + .04em) + (1ch - .5em) / 2); top: -.2em;             /* above the "i" (5th letter, monospace) */
+  background: var(--bk-accent);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='%23000'%3E%3Cellipse cx='12' cy='15.5' rx='5.5' ry='4.5'/%3E%3Cellipse cx='5.5' cy='9' rx='2.2' ry='2.8'/%3E%3Cellipse cx='9.5' cy='5.5' rx='2.2' ry='2.8'/%3E%3Cellipse cx='14.5' cy='5.5' rx='2.2' ry='2.8'/%3E%3Cellipse cx='18.5' cy='9' rx='2.2' ry='2.8'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='%23000'%3E%3Cellipse cx='12' cy='15.5' rx='5.5' ry='4.5'/%3E%3Cellipse cx='5.5' cy='9' rx='2.2' ry='2.8'/%3E%3Cellipse cx='9.5' cy='5.5' rx='2.2' ry='2.8'/%3E%3Cellipse cx='14.5' cy='5.5' rx='2.2' ry='2.8'/%3E%3Cellipse cx='18.5' cy='9' rx='2.2' ry='2.8'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat; }
 
 /* ---------- Cards: modular compartments ---------- */
 .card { --bs-card-bg: var(--bk-surface); --bs-card-border-color: var(--bk-line); --bs-card-border-radius: .4rem;
   --bs-card-inner-border-radius: calc(.4rem - 1px); }
 .card h2 { letter-spacing: .02em; }
+/* Module titles: a short olive bar in front, like a label on a drawer */
+.card h2.h6 { display: flex; align-items: center; gap: .5rem; font-weight: 700 !important; }
+.card h2.h6::before { content: ""; width: 3px; height: .95em; border-radius: 1px; background: var(--bk-primary); }
 /* Module number (data-tag) stuck on each card's top edge, like a label sticker */
 .bk-module::before { content: attr(data-tag); position: absolute; left: 1rem; top: 0; transform: translateY(-50%); z-index: 1;
   padding: .15rem .4rem .1rem; background: var(--bk-surface); border: 1px solid currentColor; border-radius: 2px;
@@ -144,9 +291,6 @@ body.bg-body-tertiary { background: var(--bk-grain), var(--bk-bg) !important; }
   letter-spacing: .06em; color: var(--bk-dark) !important; }
 .card .text-body-secondary.fw-semibold.small::after { content: ""; flex: 1; border-top: 1px dashed var(--bk-line); }
 .card .text-body-secondary.fw-semibold.small.me-auto { flex: 1; } /* 輸出尺寸: the rule runs up to the unit select */
-/* Room under each group title (incl. the 輸出尺寸 row with its unit select) */
-.card div.text-body-secondary.fw-semibold.small,
-.card .d-flex:has(> .me-auto.fw-semibold) { margin-bottom: .75rem !important; }
 
 /* ---------- Buttons: physical keys ---------- */
 .btn { --bs-btn-border-radius: .3rem; --bs-btn-font-weight: 500; }
@@ -155,19 +299,22 @@ body.bg-body-tertiary { background: var(--bk-grain), var(--bk-bg) !important; }
 .btn:not(.nav-side):not(:disabled):not(.disabled):active,
 .btn-check:checked + .btn { transform: translateY(1px); box-shadow: var(--bk-key-shadow-pressed) !important; }
 .btn:disabled, .btn.disabled { box-shadow: none !important; }
+/* Theme tokens: --bk-on-primary = text on the main color, --bk-primary-dark = its hover/pressed
+   step, --bk-ink = main-color text on the page */
 .btn-primary {
-  --bs-btn-color: #F7F4EB; --bs-btn-bg: var(--bk-primary); --bs-btn-border-color: var(--bk-primary-dark);
-  --bs-btn-hover-color: #F7F4EB; --bs-btn-hover-bg: var(--bk-primary-dark); --bs-btn-hover-border-color: var(--bk-primary-dark);
-  --bs-btn-active-color: #F7F4EB; --bs-btn-active-bg: var(--bk-primary-dark); --bs-btn-active-border-color: var(--bk-primary-dark);
-  --bs-btn-disabled-color: #F7F4EB; --bs-btn-disabled-bg: var(--bk-primary); --bs-btn-disabled-border-color: var(--bk-primary);
+  --bs-btn-color: var(--bk-on-primary); --bs-btn-bg: var(--bk-primary); --bs-btn-border-color: var(--bk-primary);
+  --bs-btn-hover-color: var(--bk-on-primary); --bs-btn-hover-bg: var(--bk-primary-dark); --bs-btn-hover-border-color: var(--bk-primary-dark);
+  --bs-btn-active-color: var(--bk-on-primary); --bs-btn-active-bg: var(--bk-primary-dark); --bs-btn-active-border-color: var(--bk-primary-dark);
+  --bs-btn-disabled-color: var(--bk-on-primary); --bs-btn-disabled-bg: var(--bk-primary); --bs-btn-disabled-border-color: var(--bk-primary);
   --bs-btn-focus-shadow-rgb: var(--bk-primary-rgb);
 }
-[data-bs-theme="dark"] .btn-primary { --bs-btn-color: #23251F; --bs-btn-hover-color: #23251F; --bs-btn-active-color: #23251F;
-  --bs-btn-disabled-color: #23251F; }
+/* Where the main color is light (dark mode, baby blue), the checkbox tick is dark */
+[data-bs-theme="dark"] .form-check-input:checked[type=checkbox] {
+  --bs-form-check-bg-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%231E1F1A' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e"); }
 .btn-outline-primary {
-  --bs-btn-color: var(--bk-primary-dark); --bs-btn-bg: var(--bk-field); --bs-btn-border-color: var(--bk-primary);
-  --bs-btn-hover-color: #F7F4EB; --bs-btn-hover-bg: var(--bk-primary); --bs-btn-hover-border-color: var(--bk-primary);
-  --bs-btn-active-color: #F9F7F1; --bs-btn-active-bg: var(--bk-primary); --bs-btn-active-border-color: var(--bk-primary);
+  --bs-btn-color: var(--bk-ink); --bs-btn-bg: var(--bk-field); --bs-btn-border-color: var(--bk-primary);
+  --bs-btn-hover-color: var(--bk-on-primary); --bs-btn-hover-bg: var(--bk-primary); --bs-btn-hover-border-color: var(--bk-primary);
+  --bs-btn-active-color: var(--bk-on-primary); --bs-btn-active-bg: var(--bk-primary); --bs-btn-active-border-color: var(--bk-primary);
   --bs-btn-disabled-color: var(--bk-primary); --bs-btn-disabled-bg: transparent; --bs-btn-disabled-border-color: var(--bk-primary);
   --bs-btn-focus-shadow-rgb: var(--bk-primary-rgb);
 }
@@ -191,7 +338,7 @@ body.bg-body-tertiary { background: var(--bk-grain), var(--bk-bg) !important; }
   --bs-btn-focus-shadow-rgb: var(--bk-danger-rgb);
 }
 /* ‹ › keep their frameless look (declared after the outline-secondary colors above) */
-.btn.nav-side { --bs-btn-bg: transparent; --bs-btn-border-color: transparent; --bs-btn-color: var(--bk-primary);
+.btn.nav-side { --bs-btn-bg: transparent; --bs-btn-border-color: transparent; --bs-btn-color: var(--bk-ink);
   --bs-btn-hover-bg: var(--bk-tray); --bs-btn-hover-border-color: transparent; --bs-btn-hover-color: var(--bk-primary-dark);
   --bs-btn-active-bg: var(--bs-secondary-bg); --bs-btn-active-border-color: transparent; --bs-btn-active-color: var(--bk-primary-dark);
   --bs-btn-disabled-bg: transparent; --bs-btn-disabled-border-color: transparent; }
@@ -208,7 +355,13 @@ body.bg-body-tertiary { background: var(--bk-grain), var(--bk-bg) !important; }
 .form-check-input { background-color: var(--bk-field); border-color: #A9A18C; }
 .form-check-input:checked { background-color: var(--bk-primary); border-color: var(--bk-primary); }
 .form-check-input:focus { border-color: var(--bk-primary); box-shadow: 0 0 0 .2rem rgba(var(--bk-primary-rgb), .25); }
-textarea.form-control { font-family: var(--bs-font-monospace); font-size: .95rem; }
+/* Text box: a little more line spacing for lists of codes */
+textarea.form-control { line-height: 1.6; }
+/* Select arrows in the olive tone */
+.form-select { --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%235F6C55' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e"); }
+[data-bs-theme="dark"] .form-select { --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23B6C1A9' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e"); }
+/* Smooth color changes on interactive bits */
+.form-control, .form-select, .input-group-text { transition: border-color .15s, box-shadow .15s, background-color .15s; }
 
 /* ---------- Menus, dialogs, progress ---------- */
 .dropdown-menu { --bs-dropdown-bg: var(--bk-surface); --bs-dropdown-border-color: var(--bk-line);
@@ -220,13 +373,15 @@ textarea.form-control { font-family: var(--bs-font-monospace); font-size: .95rem
 
 /* ---------- Preview ---------- */
 /* Empty state: an empty tray waiting for input */
-#empty { padding: 2.25rem 3rem 2rem; background: var(--bk-tray); border: 1px dashed var(--bk-line); border-radius: .4rem; }
+#empty { background: var(--bk-tray); border: 1px dashed var(--bk-line); border-radius: .4rem; }
 #empty::before { content: "READY"; display: block; margin-bottom: .75rem;
   font: 400 .625rem/1 "OCR-B", var(--bs-font-monospace); letter-spacing: .2em; color: var(--bk-accent); }
-#empty .bi { color: var(--bk-primary); opacity: .8 !important; }
 /* Canvas stage: a recessed tray with a dashed edge; the barcode sits on it like a label */
 .canvas-wrap:not(.is-empty) { background: var(--bk-tray); outline: 1px dashed var(--bk-line); outline-offset: -1px; }
 #out { box-shadow: 0 2px 8px rgba(var(--bk-dark-rgb), .08), 0 0 0 1px rgba(var(--bk-dark-rgb), .06); }
+/* "/ 4" after the number field: a little breathing room, no extra space after it */
+#pos { padding-left: 8px; white-space: nowrap; } /* + the 4px gap = 12px before the "/" */
+#pos .pos-total { margin-left: 12px; }
 /* Whole-set tiles: storage compartments */
 .grid-item { background: var(--bk-surface); }
 .grid-thumb { border: 1px dashed var(--bk-line); }
@@ -246,20 +401,26 @@ textarea.form-control { font-family: var(--bs-font-monospace); font-size: .95rem
 
 /* Easier on the eyes in dark mode: the white barcode preview is dimmed a little
    (display only; downloads and printing are unchanged) */
-[data-bs-theme="dark"] #out, [data-bs-theme="dark"] .grid-thumb { filter: brightness(.86); }
+[data-bs-theme="dark"] #out, [data-bs-theme="dark"] .grid-thumb { filter: brightness(.95); }
 /* Download buttons: slightly smaller text */
-#downloads .btn { --bs-btn-font-size: .875rem; }
+#downloads .btn, #gridBar .btn { --bs-btn-font-size: .875rem; }
 
-/* ---------- Finishing touches ---------- */
-/* Module titles: a short olive bar in front, like a label on a drawer */
-.card h2.h6 { display: flex; align-items: center; gap: .5rem; font-weight: 700 !important; }
-.card h2.h6::before { content: ""; width: 3px; height: .95em; border-radius: 1px; background: var(--bk-primary); }
-/* Text box: a little more line spacing for lists of codes */
-textarea.form-control { line-height: 1.6; }
-/* Select arrows in the olive tone */
-.form-select { --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%235F6C55' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e"); }
-[data-bs-theme="dark"] .form-select { --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23B6C1A9' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e"); }
-/* Page counter "1 / 2": bold current number */
-#posInput { font-weight: 700; color: var(--bk-dark); }
-/* Smooth color changes on interactive bits */
-.form-control, .form-select, .input-group-text { transition: border-color .15s, box-shadow .15s, background-color .15s; }
+/* ---------- Mascot: the Pomeranian shop clerk ---------- */
+.bk-pom { flex: 0 0 auto; }
+/* Pixel-art strip under the output card: the dog works at the computer, prints a label,
+   sticks it on a box, then naps */
+.bk-strip, .bk-px { image-rendering: pixelated; }
+/* A short trail of paw prints in the output card's bottom-left corner (desktop; hidden
+   in the whole-set view, where its bar sits there) */
+@media (min-width: 992px) {
+  .preview-card::after { content: ""; position: absolute; left: 1rem; bottom: .9rem; width: 64px; height: 22px;
+    --bk-paw: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='%235F6C55'%3E%3Cellipse cx='12' cy='15.5' rx='5.5' ry='4.5'/%3E%3Cellipse cx='5.5' cy='9' rx='2.2' ry='2.8'/%3E%3Cellipse cx='9.5' cy='5.5' rx='2.2' ry='2.8'/%3E%3Cellipse cx='14.5' cy='5.5' rx='2.2' ry='2.8'/%3E%3Cellipse cx='18.5' cy='9' rx='2.2' ry='2.8'/%3E%3C/g%3E%3C/svg%3E");
+    background: var(--bk-paw) 0 10px / 12px no-repeat, var(--bk-paw) 22px 2px / 12px no-repeat,
+      var(--bk-paw) 44px 9px / 12px no-repeat;
+    opacity: .22; pointer-events: none; }
+  .preview-card:has(#gridView:not([hidden]))::after { display: none; }
+}
+/* Mascot strip: a little dimmer in dark mode (its floor line and white dog would glare);
+   hidden on narrow phones, where it would be too small to see */
+[data-bs-theme="dark"] .bk-strip { filter: brightness(.95); }
+@media (max-width: 575.98px) { .bk-strip { display: none !important; } }
