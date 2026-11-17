@@ -92,7 +92,7 @@
 .tabular { font-variant-numeric: tabular-nums; }
 /* Labels inside input groups: compact (Bootstrap sets 1rem on .input-group-text) */
 .opt-label { padding-left: .5rem; padding-right: .5rem; font-size: .875rem; }
-.input-group > .color-swatch { flex: 0 0 calc(1.5em + .75rem + 2px); padding: .375rem; }
+.input-group > .color-swatch { flex: 0 0 calc(1.5em + .5rem + 2px); padding: .25rem; }
 input[type="color"]::-webkit-color-swatch { border: 0; border-radius: .25rem; }
 input[type="color"]::-moz-color-swatch { border: 0; border-radius: .25rem; }
 /* Light colors would vanish into the white field: give them a thin outline
@@ -106,9 +106,9 @@ input[type="color"].is-light::-moz-color-swatch { border: 1px solid rgba(var(--b
 
 /* ---------- Dialogs ---------- */
 .clear-icon { width: 3.5rem; height: 3.5rem; } /* round icon in the clear-content dialog */
-/* A4 preview in the print dialog (0.8 px per mm) */
-.sheet-preview { width: 168px; height: 237.6px; }
-.sheet-preview-grid { display: grid; } /* columns/rows set inline (0.8 px per mm) */
+/* A4 preview in the print dialog (1.2 px per mm = PREVIEW_SCALE in print.js) */
+.sheet-preview { width: 252px; height: 356.4px; }
+.sheet-preview-grid { display: grid; } /* columns/rows set inline */
 .sheet-preview-grid > div {
   display: flex; align-items: center; justify-content: center; padding: 2px;
   outline: 1px dashed #dee2e6; outline-offset: -1px;

@@ -64,26 +64,28 @@ function updatePrintDialog() {
 $('printModal').addEventListener('show.bs.modal', updatePrintDialog);
 ['printLayout', 'printStart', 'printFrom', 'printCols', 'printRows'].forEach(id => $(id).addEventListener('input', updatePrintDialog));
 $('print').addEventListener('click', () => { printList = null; });
-// First page in miniature (0.8 px per mm), shifted by the offset fields
+// First page in miniature, shifted by the offset fields
+const PREVIEW_SCALE = 1.2; // px per mm (A4 = 252 × 356 px; matches .sheet-preview in app.css)
 function renderSheetPreview() {
   const grid = $('sheetPreview'), o = opts(), L = getLayout();
   const list = getPrintList().slice(0, L.per - L.skip);
-  grid.style.gridTemplateColumns = `repeat(${L.cols}, ${L.w * 0.8}px)`;
-  grid.style.gridTemplateRows = `repeat(${L.rows}, ${L.h * 0.8}px)`;
+  grid.style.gridTemplateColumns = `repeat(${L.cols}, ${L.w * PREVIEW_SCALE}px)`;
+  grid.style.gridTemplateRows = `repeat(${L.rows}, ${L.h * PREVIEW_SCALE}px)`;
   grid.replaceChildren();
   for (let c = 0; c < L.per; c++) {
     const cell = document.createElement('div'), i = c - L.skip;
     if (i < 0) cell.className = 'used'; // already used on the sheet
     else if (list[i] !== undefined) {
-      try { cell.appendChild(fluidSvg(list[i], { ...o, thumb: true })); } catch {}
+      try { cell.appendChild(fluidSvg(list[i], o)); } catch {} // with its text, as printed
     }
     grid.appendChild(cell);
   }
   shiftPreview();
 }
-// Miniature follows the offset fields (0.8 px per mm)
+// Miniature follows the offset fields
 const shiftPreview = () => {
-  $('sheetPreview').style.transform = `translate(${(+$('printOffX').value || 0) * 0.8}px, ${(+$('printOffY').value || 0) * 0.8}px)`;
+  const [x, y] = ['printOffX', 'printOffY'].map(id => (+$(id).value || 0) * PREVIEW_SCALE);
+  $('sheetPreview').style.transform = `translate(${x}px, ${y}px)`;
 };
 ['printOffX', 'printOffY'].forEach(id => $(id).addEventListener('input', shiftPreview));
 $('printConfirm').onclick = () => {

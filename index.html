@@ -41,7 +41,7 @@
   </div>
   <div class="row g-3">
     <!-- Content & settings: first in the page (Tab order), left on desktop -->
-    <div class="col-lg-4 order-2 order-lg-1">
+    <div class="col-lg-5 col-xl-4 order-2 order-lg-1">
       <div class="d-flex flex-column gap-3">
       <section class="card bk-module" data-tag="INPUT 01"><div class="card-body">
         <h2 class="h6 fw-semibold mb-3">條碼內容</h2>
@@ -96,10 +96,10 @@
 
         <div id="paneBatch" hidden>
           <div class="row g-2">
-            <div class="col-6"><div class="input-group"><label for="bPrefix" class="input-group-text opt-label">前綴</label><input id="bPrefix" class="form-control px-2" placeholder="如 ABC-"></div></div>
-            <div class="col-6"><div class="input-group"><label for="bSuffix" class="input-group-text opt-label">後綴</label><input id="bSuffix" class="form-control px-2" placeholder="選填"></div></div>
+            <div class="col-6"><div class="input-group input-group-sm"><label for="bPrefix" class="input-group-text opt-label">前綴</label><input id="bPrefix" class="form-control px-2" placeholder="如 ABC-"></div></div>
+            <div class="col-6"><div class="input-group input-group-sm"><label for="bSuffix" class="input-group-text opt-label">後綴</label><input id="bSuffix" class="form-control px-2" placeholder="選填"></div></div>
             <div class="col-12">
-              <div class="input-group">
+              <div class="input-group input-group-sm">
                 <label for="bStart" class="input-group-text opt-label">起</label><input id="bStart" class="form-control px-2" inputmode="numeric" placeholder="如 01">
                 <label for="bEnd" class="input-group-text opt-label">迄</label><input id="bEnd" class="form-control px-2" inputmode="numeric" placeholder="如 50">
                 <label for="bStep" class="input-group-text opt-label">增量</label><input id="bStep" class="form-control px-2" inputmode="numeric" placeholder="1">
@@ -120,15 +120,15 @@
           <div class="small fw-semibold text-body-secondary mb-3">條碼外觀</div>
           <!-- Label sits inside each field (prefix), so every option takes one line -->
           <div class="row g-2">
-            <div class="col-6"><div class="input-group"><label for="barWidth" class="input-group-text opt-label">線寬</label><input id="barWidth" class="form-control px-2" type="number" min="1" max="6" value="2"><span class="input-group-text px-2">px</span></div></div>
-            <div class="col-6"><div class="input-group"><label for="height" class="input-group-text opt-label">高度</label><input id="height" class="form-control px-2" type="number" min="10" max="300" value="100"><span class="input-group-text px-2">px</span></div></div>
-            <div class="col-6"><div class="input-group"><label for="marginY" class="input-group-text opt-label">上下邊距</label><input id="marginY" class="form-control px-2" type="number" min="0" max="100" value="10"><span class="input-group-text px-2">px</span></div></div>
-            <div class="col-6"><div class="input-group"><label for="marginX" class="input-group-text opt-label">左右邊距</label><input id="marginX" class="form-control px-2" type="number" min="0" max="100" value="10"><span class="input-group-text px-2">px</span></div></div>
+            <div class="col-6"><div class="input-group input-group-sm"><label for="barWidth" class="input-group-text opt-label">線寬</label><input id="barWidth" class="form-control px-2" type="number" min="1" max="6" value="2"><span class="input-group-text px-2">px</span></div></div>
+            <div class="col-6"><div class="input-group input-group-sm"><label for="height" class="input-group-text opt-label">高度</label><input id="height" class="form-control px-2" type="number" min="10" max="300" value="100"><span class="input-group-text px-2">px</span></div></div>
+            <div class="col-6"><div class="input-group input-group-sm"><label for="marginY" class="input-group-text opt-label">上下邊距</label><input id="marginY" class="form-control px-2" type="number" min="0" max="100" value="10"><span class="input-group-text px-2">px</span></div></div>
+            <div class="col-6"><div class="input-group input-group-sm"><label for="marginX" class="input-group-text opt-label">左右邊距</label><input id="marginX" class="form-control px-2" type="number" min="0" max="100" value="10"><span class="input-group-text px-2">px</span></div></div>
           </div>
           <div class="small fw-semibold text-body-secondary mt-4 mb-3">文字</div>
           <div class="row g-2">
             <div class="col-6">
-              <div class="input-group">
+              <div class="input-group input-group-sm">
                 <label for="font" class="input-group-text opt-label">字體</label>
                 <select id="font" class="form-select px-2">
                   <option value="monospace" selected>等寬</option>
@@ -138,7 +138,7 @@
               </div>
               <div class="form-text" id="fontHint" hidden>GS1 商品條碼標準字型</div>
             </div>
-            <div class="col-6"><div class="input-group"><label for="fontSize" class="input-group-text opt-label">字級</label><input id="fontSize" class="form-control px-2" type="number" min="8" max="48" value="20"><span class="input-group-text px-2">px</span></div></div>
+            <div class="col-6"><div class="input-group input-group-sm"><label for="fontSize" class="input-group-text opt-label">字級</label><input id="fontSize" class="form-control px-2" type="number" min="8" max="48" value="20"><span class="input-group-text px-2">px</span></div></div>
           </div>
         </div>
 
@@ -146,7 +146,7 @@
           <div class="small fw-semibold text-body-secondary mb-3">條碼外觀</div>
           <div class="row g-2">
             <div class="col-6">
-              <div class="input-group">
+              <div class="input-group input-group-sm">
                 <label for="ecLevel" class="input-group-text opt-label">容錯</label>
                 <select id="ecLevel" class="form-select px-2">
                   <option value="L">L 7%</option>
@@ -156,15 +156,15 @@
                 </select>
               </div>
             </div>
-            <div class="col-6"><div class="input-group"><label for="cellSize" class="input-group-text opt-label">模組</label><input id="cellSize" class="form-control px-2" type="number" min="1" max="20" value="8"><span class="input-group-text px-2">px</span></div></div>
-            <div class="col-6"><div class="input-group"><label for="qrMargin" class="input-group-text opt-label">邊距</label><input id="qrMargin" class="form-control px-2" type="number" min="0" max="10" value="4"><span class="input-group-text px-2">格</span></div></div>
+            <div class="col-6"><div class="input-group input-group-sm"><label for="cellSize" class="input-group-text opt-label">模組</label><input id="cellSize" class="form-control px-2" type="number" min="1" max="20" value="8"><span class="input-group-text px-2">px</span></div></div>
+            <div class="col-6"><div class="input-group input-group-sm"><label for="qrMargin" class="input-group-text opt-label">邊距</label><input id="qrMargin" class="form-control px-2" type="number" min="0" max="10" value="4"><span class="input-group-text px-2">格</span></div></div>
           </div>
         </div>
 
         <div class="small fw-semibold text-body-secondary mt-4 mb-3">顏色</div>
         <div class="row g-2">
-          <div class="col-6"><div class="input-group"><label for="lineColor" class="input-group-text opt-label">條碼</label><input id="lineColor" class="form-control form-control-color color-swatch" type="color" value="#000000"><input id="lineColorHex" class="form-control px-1 text-center tabular" maxlength="7" aria-label="條碼顏色色碼"></div></div>
-          <div class="col-6"><div class="input-group"><label for="background" class="input-group-text opt-label">背景</label><input id="background" class="form-control form-control-color color-swatch" type="color" value="#ffffff"><input id="backgroundHex" class="form-control px-1 text-center tabular" maxlength="7" aria-label="背景顏色色碼"></div></div>
+          <div class="col-6"><div class="input-group input-group-sm"><label for="lineColor" class="input-group-text opt-label">條碼</label><input id="lineColor" class="form-control form-control-sm form-control-color color-swatch" type="color" value="#000000"><input id="lineColorHex" class="form-control px-2 tabular" maxlength="7" aria-label="條碼顏色色碼"></div></div>
+          <div class="col-6"><div class="input-group input-group-sm"><label for="background" class="input-group-text opt-label">背景</label><input id="background" class="form-control form-control-sm form-control-color color-swatch" type="color" value="#ffffff"><input id="backgroundHex" class="form-control px-2 tabular" maxlength="7" aria-label="背景顏色色碼"></div></div>
         </div>
         <div class="form-check mt-2">
           <input id="transparent" class="form-check-input" type="checkbox">
@@ -181,13 +181,13 @@
           <button id="sizeClear" type="button" class="tip btn btn-sm btn-outline-secondary py-0" title="恢復預設尺寸" aria-label="恢復預設尺寸" hidden><i class="bi bi-arrow-counterclockwise"></i></button>
         </div>
         <div class="d-flex align-items-center gap-1">
-          <div class="input-group flex-fill">
+          <div class="input-group input-group-sm flex-fill">
             <label for="imgW" class="input-group-text opt-label">寬</label>
             <input id="imgW" class="form-control px-2" type="number" min="1" step="0.1" aria-label="輸出寬度">
             <span class="input-group-text px-2 unit-label">px</span>
           </div>
           <i class="bi bi-link-45deg text-body-secondary" aria-hidden="true"></i>
-          <div class="input-group flex-fill">
+          <div class="input-group input-group-sm flex-fill">
             <label for="imgH" class="input-group-text opt-label">高</label>
             <input id="imgH" class="form-control px-2" type="number" min="1" step="0.1" aria-label="輸出高度">
             <span class="input-group-text px-2 unit-label">px</span>
@@ -198,7 +198,7 @@
     </div>
 
     <!-- Preview & output: shown first on phones, right on desktop -->
-    <div class="col-lg-8 order-1 order-lg-2">
+    <div class="col-lg-7 col-xl-8 order-1 order-lg-2">
       <!-- Output card + mascot strip below it (sticky together on desktop) -->
       <div class="preview-col d-flex flex-column gap-2">
       <div class="card preview-card bk-module" data-tag="OUTPUT 03"><div class="card-body d-flex flex-column gap-3">
@@ -396,7 +396,7 @@
       </div>
       <div class="modal-footer border-0 pt-0">
         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">取消</button>
-        <button type="button" id="printConfirm" class="btn btn-primary px-4"><i class="bi bi-printer me-1" aria-hidden="true"></i>列印</button>
+        <button type="button" id="printConfirm" class="btn btn-primary px-4"><i class="bi bi-printer me-1" aria-hidden="true"></i>選擇印表機</button>
       </div>
     </div>
   </div>

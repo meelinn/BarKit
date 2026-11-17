@@ -247,7 +247,8 @@ $('posInput').addEventListener('keydown', e => { if (e.key === 'Enter') { e.prev
 
 
 $('prev').onclick = () => go(-1);
-$('next').onclick = () => go(1);  // Arrow keys switch preview, except while typing in a field
+$('next').onclick = () => go(1);
+// Arrow keys switch preview, except while typing in a field
 document.addEventListener('keydown', e => {
   if (e.target.closest('input, textarea, select, .dropdown-menu, .modal') || e.altKey || e.ctrlKey || e.metaKey) return;
   if (!$('gridView').hidden || document.querySelector('.modal.show')) return; // grid has its own arrow keys
@@ -256,6 +257,15 @@ document.addEventListener('keydown', e => {
 });
 // Remember which size side the user typed (registered before render, which fills the other)
 ['imgW', 'imgH'].forEach(id => $(id).addEventListener('input', () => { sizeSide = id; }));
+// Content fields take no spaces (typed or pasted); line breaks stay. Registered before render
+const SPACES = /[ \t\u3000]/g; // half-width space, tab, full-width space
+CONTENT_IDS.forEach(id => $(id).addEventListener('input', () => {
+  const el = $(id), clean = el.value.replace(SPACES, '');
+  if (clean === el.value) return;
+  const caret = el.value.slice(0, el.selectionStart).replace(SPACES, '').length;
+  el.value = clean;
+  el.setSelectionRange(caret, caret);
+}));
 fields.forEach(id => $(id).addEventListener('input', render));
 load();
 if (!$('imgW').value && $('imgH').value) sizeSide = 'imgH';
