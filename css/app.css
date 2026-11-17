@@ -1,0 +1,164 @@
+/* ---------- Preview ---------- */
+#topBar { min-height: 31px; }
+.canvas-wrap {
+  /* The barcode never scrolls (zoom is capped to fit), but this box may still shrink:
+     it is the one item allowed to shrink (min-width/min-height: 0), so the toolbar,
+     nav, messages and download buttons always stay visible. */
+  max-width: 100%; min-width: 0; min-height: 0; flex: 0 1 auto; overflow: hidden;
+  display: flex; align-items: center; justify-content: center; /* center a narrower item in the set-sized box */
+  background: var(--bs-tertiary-bg); /* soft stage; the barcode sits on it like a card */
+}
+#out { display: block; max-width: 100%; height: auto; border-radius: 2px;
+  /* checkerboard only behind the barcode itself (shows a transparent background) */
+  background: repeating-conic-gradient(#e5e7eb 0 25%, #fff 0 50%) 0 0 / 16px 16px;
+  box-shadow: 0 .125rem .5rem rgba(0, 0, 0, .08), 0 0 0 1px var(--bs-border-color-translucent); }
+[data-bs-theme="dark"] #out { background: repeating-conic-gradient(#343a40 0 25%, #2b3035 0 50%) 0 0 / 16px 16px; }
+/* Error state: the canvas keeps its size and shows the error inside it */
+.canvas-wrap.is-empty {
+  min-width: min(100%, 22rem); min-height: 11rem;
+  /* light neutral box with a thin light-red edge (inset: keeps the box size) */
+  background: var(--bs-tertiary-bg);
+  box-shadow: inset 0 0 0 1px var(--bs-danger-border-subtle);
+}
+.canvas-wrap.is-empty #out { display: none; }
+.err-box { display: none; max-width: 26rem; }
+.canvas-wrap.is-empty .err-box { display: block; }
+
+/* Preview grid: ‹ | toolbar + canvas | › ; "n / N" under the canvas.
+   Rows: toolbar, canvas, nav. The arrows fill rows 2–3 (canvas top to nav bottom). */
+#previewBox {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto auto auto;
+  column-gap: .5rem; row-gap: .25rem; flex: 0 1 auto; min-height: 0;
+}
+#prev { grid-column: 1; grid-row: 2 / 4; }
+#next { grid-column: 3; grid-row: 2 / 4; }
+/* Toolbar + canvas share the middle column; subgrid puts them on rows 1–2, and the
+   toolbar lines up with the canvas's right edge */
+.preview-main { grid-column: 2; grid-row: 1 / 3; display: grid; grid-template-rows: subgrid; row-gap: .25rem;
+  justify-self: center; justify-items: end; max-width: 100%; }
+#nav { grid-column: 2; grid-row: 3; margin-top: .75rem; min-height: 1.3125rem; }
+#posInput { width: 4rem; }
+#pos { min-width: 64px; }
+/* ‹ ›: no frame, blue icon, a soft background only on hover */
+.nav-side { flex: 0 0 auto; width: 3rem; font-size: 1.25rem;
+  --bs-btn-color: var(--bs-primary); --bs-btn-border-color: transparent;
+  --bs-btn-hover-color: var(--bs-primary); --bs-btn-hover-bg: var(--bs-tertiary-bg); --bs-btn-hover-border-color: transparent;
+  --bs-btn-active-color: var(--bs-primary); --bs-btn-active-bg: var(--bs-secondary-bg); --bs-btn-active-border-color: transparent;
+  --bs-btn-disabled-border-color: transparent; }
+
+/* Download buttons and ZIP progress */
+.dl-col { flex: 1 1 0; max-width: 13rem; }
+#zipProgress { max-width: 20.5rem; }
+#zipProgress .progress { height: .5rem; }
+
+/* ---------- Whole-set view: thumbnail grid, scrolls inside the preview card ---------- */
+.grid-view {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: .75rem;
+  align-content: start; overflow-y: auto; max-height: 70vh; padding: 2px;
+  scrollbar-width: thin;
+}
+/* One tile: number row, fixed-height thumbnail, value. Border, background and text color
+   stay in CSS (Bootstrap utilities are !important and would block the state colors below) */
+.grid-item { width: 100%; height: 100%; border: 1px solid var(--bs-border-color); background: var(--bs-body-bg);
+  color: var(--bs-body-color); transition: border-color .15s, box-shadow .15s; }
+.grid-item:hover { border-color: var(--bs-primary); }
+.grid-item:focus-visible { outline: 0; box-shadow: 0 0 0 .2rem rgba(var(--bs-primary-rgb), .25); }
+.grid-item.current { border-color: var(--bs-primary); box-shadow: 0 0 0 1px var(--bs-primary); }
+/* Bad tiles: red frame, and a red outline on hover / when selected */
+.grid-item.bad { border-color: var(--bs-danger); }
+.grid-item.bad:hover { box-shadow: 0 0 0 1px var(--bs-danger); }
+.grid-item.bad.current { border-color: var(--bs-danger); box-shadow: 0 0 0 1px var(--bs-danger); }
+.grid-thumb { height: 72px; background: #fff; }
+.grid-thumb svg { width: 100%; height: 100%; }
+.grid-item.bad .grid-thumb { background: var(--bs-danger-bg-subtle); }
+.grid-item.bad .grid-thumb i { font-size: 1.5rem; color: var(--bs-danger); opacity: .6; }
+.grid-item.bad .grid-label { color: var(--bs-danger); }
+/* Pick checkbox over each tile's top-left corner */
+.grid-pick-hit { width: 2.25rem; height: 2.25rem; cursor: pointer; }
+.grid-pick-hit:hover .grid-pick:not(:checked) { border-color: var(--bs-primary); }
+.grid-pick { margin: 0; cursor: pointer; }
+.grid-cell .grid-head { padding-left: 1.6rem; }
+.grid-cell.picked .grid-item { border-color: var(--bs-primary); background: var(--bs-primary-bg-subtle); }
+
+/* ---------- Form ---------- */
+.min-w-0 { min-width: 0; }
+.tabular { font-variant-numeric: tabular-nums; }
+/* Labels inside input groups: compact (Bootstrap sets 1rem on .input-group-text) */
+.opt-label { padding-left: .5rem; padding-right: .5rem; font-size: .875rem; }
+.input-group > .color-swatch { flex: 0 0 calc(1.5em + .75rem + 2px); padding: .375rem; }
+input[type="color"]::-webkit-color-swatch { border: 1px solid var(--bs-border-color); border-radius: .25rem; }
+input[type="color"]::-moz-color-swatch { border: 1px solid var(--bs-border-color); border-radius: .25rem; }
+#formatHint:empty, #bPreview:empty { display: none; }
+.btn-quiet { --bs-btn-font-size: .75rem; --bs-btn-border-color: var(--bs-border-color); }
+/* 清空內容: quiet like the reset button, turns red on hover */
+.btn-clear:hover, .btn-clear:focus-visible { color: var(--bs-danger); border-color: var(--bs-danger); background: transparent; }
+
+/* ---------- Dialogs ---------- */
+.clear-icon { width: 3.5rem; height: 3.5rem; } /* round icon in the clear-content dialog */
+/* A4 preview in the print dialog (0.8 px per mm) */
+.sheet-preview { width: 168px; height: 237.6px; }
+.sheet-preview-grid { display: grid; } /* columns/rows set inline (0.8 px per mm) */
+.sheet-preview-grid > div {
+  display: flex; align-items: center; justify-content: center; padding: 2px;
+  outline: 1px dashed #dee2e6; outline-offset: -1px;
+}
+.sheet-preview-grid > .used { background: repeating-linear-gradient(45deg, #f1f3f5 0 4px, #e9ecef 4px 8px); }
+.sheet-preview-grid svg { width: 100%; height: 100%; }
+
+/* ---------- Breakpoints ---------- */
+/* Phones */
+@media (max-width: 575.98px) {
+  /* The canvas takes the full width; ‹ › move to the "n / N" line */
+  .preview-main { grid-column: 1 / -1; }
+  #prev, #next { grid-row: 3; }
+  .err-box { font-size: .75rem; }
+  .err-box #errHint { display: none; }
+  /* 16px controls so iOS does not zoom on focus */
+  .form-select-sm, .form-control-sm { font-size: 1rem; }
+}
+@media (min-width: 576px) {
+  .nav-side { width: 4.5rem; } /* wider ‹ › click area when there is room */
+}
+/* Phones and tablets */
+@media (max-width: 991.98px) {
+  #previewArea { min-height: 280px; }
+  /* The error box keeps the barcode width (no wider than the preview) */
+  .canvas-wrap.is-empty { min-width: 0; min-height: 8rem; }
+  /* Download buttons stay reachable in a bar at the bottom */
+  #downloads {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 1020;
+    padding: .5rem 1rem; background: var(--bs-body-bg);
+    border-top: 1px solid var(--bs-border-color); box-shadow: 0 -.25rem .75rem rgba(0, 0, 0, .06);
+  }
+  #downloads .dl-col { max-width: none; } /* use the full bar width */
+  body { padding-bottom: 7rem; }
+}
+/* Desktop: the page scrolls; the preview card sticks and fills the viewport height */
+@media (min-width: 992px) {
+  /* Stick where the card starts (page padding + theme row = 2rem + 31px), so it never
+     slides up and leaves a gap at the bottom while scrolling */
+  .preview-card { position: sticky; top: calc(2rem + 31px); height: calc(100vh - 3.5rem - 31px); }
+  .preview-card .card-body { min-height: 0; overflow: hidden; }
+  /* Barcode centered in the space above, downloads at the card bottom; the padding
+     below matches the view toggle row above, so the preview stays centered */
+  #previewBox { margin-top: auto; }
+  #downloads { margin-top: auto; padding-bottom: 31px; }
+  .grid-view { flex: 1 1 0; min-height: 0; max-height: none; }
+}
+
+/* ---------- Printing: label sheet, only visible when printing ---------- */
+#sheet { display: none; }
+@page { size: A4; margin: 0; }
+@media print {
+  body { background: #fff !important; }
+  #sheet { display: block; }
+  .page { width: 210mm; height: 297mm; break-after: page; overflow: hidden; }
+  .page:last-child { break-after: auto; }
+  /* Label grid; shifted by the print offset to compensate for printer misalignment */
+  .page-grid {
+    display: grid; /* columns/rows set inline from the chosen label layout */
+    transform: translate(var(--off-x, 0mm), var(--off-y, 0mm));
+  }
+  .label { display: flex; align-items: center; justify-content: center; padding: 2mm; }
+  .label svg { width: 100%; height: 100%; }
+}
