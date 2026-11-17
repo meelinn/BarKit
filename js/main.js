@@ -200,13 +200,16 @@ const setTheme = t => {
 $('themeLight').checked = document.documentElement.dataset.bsTheme !== 'dark';
 $('themeDark').checked = !$('themeLight').checked;
 document.querySelectorAll('[name="theme"]').forEach(r => r.addEventListener('change', () => setTheme($('themeDark').checked ? 'dark' : 'light')));
-// Main color (top left): retro green, fresh blue or minimal white; remembered.
-// The mascot pictures have a color version per palette (img/<name>-blue.svg …).
+// Main color (top right): retro green, fresh blue or minimal white; remembered.
+// The mascot pictures have a color version per palette (img/<name>-blue.svg …); the strip
+// (data-holiday) also has a holiday version (img/pom-pixel-xmas-blue.svg …, see theme.js).
 const PALETTES = { paletteGreen: 'green', paletteBlue: 'blue', paletteWhite: 'white' };
 function applyPalette(p) {
   p === 'green' ? delete document.documentElement.dataset.bkPalette : (document.documentElement.dataset.bkPalette = p);
+  const holiday = document.documentElement.dataset.bkHoliday;
   document.querySelectorAll('img[data-pal]').forEach(img => {
-    img.src = `img/${img.dataset.pal}${p === 'green' ? '' : '-' + p}.svg`;
+    const h = holiday && 'holiday' in img.dataset ? '-' + holiday : '';
+    img.src = `img/${img.dataset.pal}${h}${p === 'green' ? '' : '-' + p}.svg`;
   });
 }
 const currentPalette = document.documentElement.dataset.bkPalette || 'green';
