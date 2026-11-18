@@ -305,13 +305,14 @@ body.bg-body-tertiary { background: var(--bk-grain), var(--bk-bg) !important; }
   font-family: "OCR-B", var(--bs-font-monospace);
 }
 
-/* Brand mark: barcode stripes + name + small tag */
 /* Phones: one swatch and one day/night button, each tap switches to the next (main.js) */
 @media (max-width: 575.98px) {
   .bk-palette .btn-check:not(:checked) + .bk-swatch,
   [name="theme"]:not(:checked) + label { display: none; }
   [name="theme"] + label { border-radius: var(--bs-btn-border-radius) !important; margin-left: 0 !important; }
 }
+
+/* Brand mark: barcode stripes + name + small tag */
 .bk-brand { display: flex; align-items: center; gap: .5rem; font-size: 1.05rem; font-weight: 700;
   letter-spacing: .04em; color: var(--bk-dark); line-height: 1; }
 .bk-bars { width: 22px; height: 7px; align-self: flex-end; margin-bottom: 1px; position: relative;
