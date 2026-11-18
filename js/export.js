@@ -21,7 +21,6 @@ function svgString(sized = false, src = out) {
 const MM_PER_PX = 25.4 / 96;
 const isPx = () => $('sizeUnit').value === 'px';
 const pxToUnit = px => isPx() ? px : px * MM_PER_PX;
-const mmToUnit = mm => isPx() ? mm / MM_PER_PX : mm;
 const fmtSize = v => isPx() ? String(Math.round(v)) : v.toFixed(1);
 
 // PNG at the chosen DPI. One CSS px = 1/96 inch; the narrowest bar (or QR cell)
@@ -48,17 +47,6 @@ async function toPngBlob(value = lines()[cur], svgEl = out) {
   const blob = await new Promise((res, rej) =>
     canvas.toBlob(b => b ? res(b) : rej(new Error('PNG 轉換失敗')), 'image/png'));
   return withDpi(blob, dpi);
-}
-
-// Center the barcode on a canvas of the exact target size
-function padCanvas(src, w, h) {
-  const c = document.createElement('canvas');
-  c.width = w; c.height = h;
-  const ctx = c.getContext('2d');
-  const bg = opts().background;
-  if (bg !== 'transparent') { ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h); }
-  ctx.drawImage(src, Math.floor((w - src.width) / 2), Math.floor((h - src.height) / 2));
-  return c;
 }
 
 function svgToCanvas(scale, svgEl = out) {

@@ -25,26 +25,19 @@ function migratePx(data) {
   ['barWidth', 'height', 'marginY', 'marginX', 'cellSize'].forEach(id => conv(id, 1 / PX_PER_MM, 2));
   conv('fontSize', 1 / PX_PER_PT, 1);
 }
-// Before v4 the side margin was always filled in (v3: in bar widths, older: mm). A margin of 10 bar
-// widths was the old default, so it becomes the new automatic one (blank); v3 values go back to mm
-function migrateMargin(data) {
-  const x = +data.barWidth || 0.33, ok = v => v !== undefined && v !== '' && isFinite(v);
-  if (data.v === 3) ['marginX', 'marginY'].forEach(id => { if (ok(data[id])) data[id] = String(+(data[id] * x).toFixed(2)); });
-  if (ok(data.marginX) && Math.abs(data.marginX - 10 * x) < .01) data.marginX = '';
+// Settings saved before v6 (v2: margins in mm, no 自動 switches): a side margin of 10 bar widths
+// or a 10 pt font size was the old default, so it becomes automatic
+function migrateAuto(data) {
+  const x = +data.barWidth || 0.33;
+  if ('marginX' in data) data.marginAuto = data.marginX === '' || Math.abs(data.marginX - 10 * x) < .01;
+  if ('fontSize' in data) data.fontAuto = data.fontSize === '' || +data.fontSize === 10;
+  ['marginX', 'fontSize'].forEach(id => { if (data[id] === '') delete data[id]; });
 }
 function load() {
   try {
     const data = JSON.parse(localStorage.getItem(KEY)) || {};
     if (!data.v) migratePx(data);
-    if (!(data.v >= 4)) migrateMargin(data);
-    // Before v5 the font size was always filled in; the old default 10 pt becomes automatic (blank)
-    if (!(data.v >= 5) && +data.fontSize === 10) data.fontSize = '';
-    // Before v6 a blank font size / side margin meant automatic; now that's a separate switch
-    if (!(data.v >= 6)) [['fontSize', 'fontAuto'], ['marginX', 'marginAuto']].forEach(([id, auto]) => {
-      if (!(id in data)) return;
-      data[auto] = data[id] === '';
-      if (data[id] === '') delete data[id];
-    });
+    if (!(data.v >= 6)) migrateAuto(data);
     fields.forEach(id => {
       if (!(id in data)) return;
       const el = $(id);

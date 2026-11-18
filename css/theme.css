@@ -63,9 +63,9 @@
   --bk-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.22 0 0 0 0 0.23 0 0 0 0 0.2 0 0 0 .03 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 [data-bs-theme="dark"] {
-  --bk-bg: #23251F;
-  --bk-surface: #2C2F27;
-  --bk-field: #24271F;
+  --bk-bg: #292A26;
+  --bk-surface: #333530;
+  --bk-field: #2B2C28;
   --bk-primary: #9DAA8F;
   --bk-primary-rgb: 157, 170, 143;
   --bk-primary-dark: #B6C1A9;
@@ -74,30 +74,30 @@
   --bk-accent: #D9935F;
   --bk-dark: #DCD6C5;
   --bk-dark-rgb: 220, 214, 197;
-  --bk-line: #4A4E41;
-  --bk-tray: #26291F;
+  --bk-line: #50534A;
+  --bk-tray: #2D2E2A;
   --bk-key-shadow: 0 1px 2px rgba(0, 0, 0, .25), 0 2px 6px rgba(0, 0, 0, .18);
   --bk-key-shadow-pressed: 0 1px 1px rgba(0, 0, 0, .2);
   --bk-danger: #D9765F;
   --bk-danger-rgb: 217, 118, 95;
 
   --bs-body-bg: var(--bk-surface);
-  --bs-body-bg-rgb: 44, 47, 39;
+  --bs-body-bg-rgb: 51, 53, 48;
   --bs-body-color: var(--bk-dark);
   --bs-body-color-rgb: var(--bk-dark-rgb);
   --bs-emphasis-color: #EAE5D7;
   --bs-secondary-color: rgba(220, 214, 197, .66);
   --bs-tertiary-color: rgba(220, 214, 197, .45);
-  --bs-secondary-bg: #3A3D33;
+  --bs-secondary-bg: #3F413A;
   --bs-tertiary-bg: var(--bk-tray);
-  --bs-tertiary-bg-rgb: 38, 41, 31;
+  --bs-tertiary-bg-rgb: 45, 46, 42;
   --bs-border-color: var(--bk-line);
   --bs-border-color-translucent: rgba(220, 214, 197, .13);
   --bs-primary: var(--bk-primary);
   --bs-primary-rgb: var(--bk-primary-rgb);
   --bs-primary-text-emphasis: #B6C1A9;
-  --bs-primary-bg-subtle: #343A2E;
-  --bs-primary-border-subtle: #56604C;
+  --bs-primary-bg-subtle: #383D34;
+  --bs-primary-border-subtle: #596153;
   --bs-success: #9DB58C;
   --bs-success-rgb: 157, 181, 140;
   --bs-danger: var(--bk-danger);
@@ -142,17 +142,17 @@
   --bk-grain: none;
 }
 [data-bk-palette="blue"][data-bs-theme="dark"] {
-  --bk-bg: #1B2128;
-  --bk-surface: #222A32;
-  --bk-field: #1E252C;
-  --bk-tray: #20272E;
-  --bk-line: #3B4753;
+  --bk-bg: #282B30;
+  --bk-surface: #30343A;
+  --bk-field: #2A2E34;
+  --bk-tray: #2C3036;
+  --bk-line: #4A515B;
   --bk-dark: #E3ECF3;
   --bk-dark-rgb: 227, 236, 243;
   --bk-accent: #D9935F;
-  --bs-body-bg-rgb: 34, 42, 50;
-  --bs-secondary-bg: #2D3742;
-  --bs-tertiary-bg-rgb: 32, 39, 46;
+  --bs-body-bg-rgb: 48, 52, 58;
+  --bs-secondary-bg: #3A3F47;
+  --bs-tertiary-bg-rgb: 44, 48, 54;
   --bs-secondary-color: rgba(227, 236, 243, .66);
   --bs-tertiary-color: rgba(227, 236, 243, .45);
   --bs-border-color-translucent: rgba(227, 236, 243, .13);
@@ -162,8 +162,8 @@
   --bk-ink: #B3CCDE;
   --bk-on-primary: #13283C;
   --bs-primary-text-emphasis: #B3CCDE;
-  --bs-primary-bg-subtle: #2C3A47;
-  --bs-primary-border-subtle: #4B6378;
+  --bs-primary-bg-subtle: #384350;
+  --bs-primary-border-subtle: #586878;
   --bs-link-color-rgb: 179, 204, 222;
 }
 [data-bk-palette="blue"] .form-select { --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23426E8E' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e"); }
@@ -198,11 +198,11 @@
   --bk-accent: #C77B52;
 }
 [data-bk-palette="white"][data-bs-theme="dark"] {
-  --bk-bg: #181818;
-  --bk-surface: #222222;
-  --bk-field: #1C1C1C;
-  --bk-tray: #1E1E1E;
-  --bk-line: #3A3A3A;
+  --bk-bg: #242424;
+  --bk-surface: #2E2E2E;
+  --bk-field: #282828;
+  --bk-tray: #2A2A2A;
+  --bk-line: #474747;
   --bk-dark: #E6E6E6;
   --bk-dark-rgb: 230, 230, 230;
   --bk-primary: #D6D6D6;
@@ -210,15 +210,15 @@
   --bk-primary-dark: #EDEDED;
   --bk-ink: #EDEDED;
   --bk-on-primary: #1A1A1A;
-  --bs-body-bg-rgb: 34, 34, 34;
-  --bs-secondary-bg: #2E2E2E;
-  --bs-tertiary-bg-rgb: 30, 30, 30;
+  --bs-body-bg-rgb: 46, 46, 46;
+  --bs-secondary-bg: #3A3A3A;
+  --bs-tertiary-bg-rgb: 42, 42, 42;
   --bs-secondary-color: rgba(230, 230, 230, .66);
   --bs-tertiary-color: rgba(230, 230, 230, .45);
   --bs-border-color-translucent: rgba(230, 230, 230, .13);
   --bs-primary-text-emphasis: #EDEDED;
-  --bs-primary-bg-subtle: #303030;
-  --bs-primary-border-subtle: #4A4A4A;
+  --bs-primary-bg-subtle: #3C3C3C;
+  --bs-primary-border-subtle: #565656;
   --bs-link-color-rgb: 237, 237, 237;
   --bk-accent: #D9935F;
 }
@@ -431,6 +431,26 @@ body.bg-body-tertiary { background: var(--bk-grain), var(--bk-bg) !important; }
   --bs-btn-disabled-bg: transparent; --bs-btn-disabled-border-color: transparent; }
 /* Small inline buttons (前往, 轉為自訂內容) stay flat */
 .btn.py-0 { box-shadow: none !important; transform: none !important; }
+/* Hover: grey-framed buttons and unselected toggles take a light tint of the main color; filled
+   buttons (and selected toggles) get a little lighter; swatches get a ring */
+:root { --bk-hover-tint: color-mix(in srgb, var(--bk-primary) 18%, var(--bk-field)); }
+.btn-outline-secondary {
+  --bs-btn-hover-color: var(--bk-ink); --bs-btn-hover-bg: var(--bk-hover-tint); --bs-btn-hover-border-color: var(--bk-primary);
+}
+.btn-primary {
+  --bs-btn-hover-bg: color-mix(in srgb, var(--bk-primary) 85%, #fff);
+  --bs-btn-hover-border-color: color-mix(in srgb, var(--bk-primary) 85%, #fff);
+}
+.btn-danger {
+  --bs-btn-hover-bg: color-mix(in srgb, var(--bk-danger) 85%, #fff);
+  --bs-btn-hover-border-color: color-mix(in srgb, var(--bk-danger) 85%, #fff);
+}
+@media (hover: hover) {
+  /* Bootstrap leaves toggle buttons (.btn-check + .btn) unchanged on hover: give them the normal one */
+  .btn-check:not(:checked) + .btn:hover { color: var(--bk-ink); background-color: var(--bk-hover-tint); border-color: var(--bk-primary); }
+  .btn-check:checked + .btn:hover { background-color: color-mix(in srgb, var(--bs-btn-active-bg) 85%, #fff); }
+  .btn-check:not(:checked) + .bk-swatch:hover { box-shadow: 0 0 0 2px var(--bk-bg), 0 0 0 3.5px var(--bk-line); }
+}
 
 /* ---------- Inputs: device input panels ---------- */
 .form-control, .form-select { background-color: var(--bk-field); border-color: var(--bk-line);
