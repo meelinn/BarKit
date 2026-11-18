@@ -112,7 +112,29 @@ async function downloadAs(ext, one = false) {
   flash(one ? dlOneBtn : $(ext === 'svg' ? 'dlSvg' : 'dlPng'), '已下載', true, `已下載 ${name}`);
 }
 
-// Mascot beside the progress bar: scanning while packing, holding the label when done
+// One item's file, not necessarily the one shown: SVG text, or a PNG blob. 1D PNGs are drawn
+// straight onto a canvas, so they only need the (cached) validity check, not an SVG.
+async function fileOf(ext, v, o = opts()) {
+  if (ext === 'png' && o.format !== 'QR') {
+    const r = checkItem(v, o);
+    if (r.error) throw new Error(r.error);
+    return toPngBlob(v, null);
+  }
+  const svg = newSvg();
+  draw(svg, v, o);
+  return ext === 'svg' ? svgString(true, svg) : toPngBlob(v, svg);
+}
+
+// Whole-set selection: a single pick downloads its file directly, more go into a ZIP
+async function downloadPicked(ext, list, btn) {
+  if (list.length > 1) return downloadZip(ext, list, btn);
+  const data = await fileOf(ext, list[0]), name = fileBase(list[0]) + '.' + ext;
+  download(typeof data === 'string' ? new Blob([data], { type: 'image/svg+xml' }) : data, name);
+  flash(btn, '已下載', true, `已下載 ${name}`);
+}
+
+// Mascot above the progress bar (on a veil over the output card): making barcodes while packing,
+// holding the label when done
 const showZipPom = done => { $('zipPomLoading').hidden = done; $('zipPomDone').hidden = !done; };
 let zipDoneTimer;
 async function downloadZip(ext, list = lines(), btn = $(ext === 'svg' ? 'dlSvg' : 'dlPng')) {
@@ -128,18 +150,7 @@ async function downloadZip(ext, list = lines(), btn = $(ext === 'svg' ? 'dlSvg' 
     $('zipCount').textContent = `${done} / ${list.length}`;
     $('zipBar').style.width = `${Math.round(done / list.length * 100)}%`;
   };
-  // One file: SVG text, or PNG. 1D PNGs are drawn straight onto a canvas, so they only
-  // need the (cached) validity check, not an SVG.
-  const file = async v => {
-    if (ext === 'png' && o.format !== 'QR') {
-      const r = checkItem(v, o);
-      if (r.error) throw new Error(r.error);
-      return toPngBlob(v, null);
-    }
-    const svg = newSvg();
-    draw(svg, v, o);
-    return ext === 'svg' ? svgString(true, svg) : toPngBlob(v, svg);
-  };
+  const file = v => fileOf(ext, v, o);
   try {
     const BATCH = 6; // PNGs encode in parallel, a few at a time
     for (let i = 0; i < list.length; i += BATCH) {
@@ -168,7 +179,7 @@ async function downloadZip(ext, list = lines(), btn = $(ext === 'svg' ? 'dlSvg' 
   showZipPom(true);
   $('zipLabel').textContent = '完成';
   clearTimeout(zipDoneTimer);
-  zipDoneTimer = setTimeout(() => { $('zipProgress').hidden = true; showZipPom(false); }, 2200);
+  zipDoneTimer = setTimeout(() => { $('zipProgress').hidden = true; showZipPom(false); }, 1500);
 }
 
 const fail = btn => e => flash(btn, '失敗', false, e.message || String(e));
@@ -179,7 +190,7 @@ const pickedList = () => { const l = lines(); return [...picked].sort((a, b) => 
   const E = ext === 'svg' ? 'Svg' : 'Png';
   $('dl' + E).onclick = () => downloadAs(ext).catch(fail($('dl' + E)));
   $('dlOne' + E).onclick = () => downloadAs(ext, true).catch(fail(dlOneBtn));
-  $('sel' + E).onclick = () => downloadZip(ext, pickedList(), $('sel' + E)).catch(fail($('sel' + E)));
+  $('sel' + E).onclick = () => downloadPicked(ext, pickedList(), $('sel' + E)).catch(fail($('sel' + E)));
 });
 // DPI menu: purpose + expected pixel size, built when opened (size depends on current options)
 // (same menu in the single view and the whole-set view; both write #dpi)

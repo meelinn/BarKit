@@ -26,7 +26,7 @@
       <input type="radio" class="btn-check" name="palette" id="paletteGreen" checked>
       <label class="bk-swatch bk-swatch-green tip" data-bs-placement="bottom" for="paletteGreen" title="復古綠" aria-label="復古綠"></label>
       <input type="radio" class="btn-check" name="palette" id="paletteBlue">
-      <label class="bk-swatch bk-swatch-blue tip" data-bs-placement="bottom" for="paletteBlue" title="清爽藍" aria-label="清爽藍"></label>
+      <label class="bk-swatch bk-swatch-blue tip" data-bs-placement="bottom" for="paletteBlue" title="馬卡龍" aria-label="馬卡龍"></label>
       <input type="radio" class="btn-check" name="palette" id="paletteWhite">
       <label class="bk-swatch bk-swatch-white tip" data-bs-placement="bottom" for="paletteWhite" title="極簡白" aria-label="極簡白"></label>
     </div>
@@ -297,17 +297,6 @@
               <option value="600">高品質</option>
             </select>
           </div>
-          <div id="zipProgress" class="mx-auto mt-2" hidden>
-            <div class="d-flex align-items-center gap-2">
-              <!-- Mascot: making barcodes while packing, holding the finished label when done -->
-              <img id="zipPomLoading" class="bk-pom bk-px" data-pal="pom-loading" src="img/pom-loading.svg" alt="" width="80" height="44">
-              <img id="zipPomDone" class="bk-pom bk-px" data-pal="pom-done" src="img/pom-done.svg" alt="" width="80" height="44" hidden>
-              <div class="flex-grow-1">
-                <div class="d-flex justify-content-between small text-body-secondary mb-1"><span id="zipLabel">打包中</span><span id="zipCount"></span></div>
-                <div class="progress" role="progressbar" aria-label="打包進度"><div id="zipBar" class="progress-bar"></div></div>
-              </div>
-            </div>
-          </div>
           </div>
         </div>
         <div id="gridView" class="grid-view" hidden></div>
@@ -325,7 +314,18 @@
             <button id="selPrint" type="button" class="btn btn-outline-secondary text-nowrap" aria-label="列印標籤" disabled><i class="bi bi-printer me-sm-1"></i><span class="d-none d-sm-inline">列印</span></button>
           </div>
         </div>
-      </div></div>
+      </div>
+      <!-- ZIP download in progress: a veil over the whole output card (single and whole-set view) with
+           the mascot making barcodes, then holding up the finished label, above the progress bar -->
+      <div id="zipProgress" class="zip-overlay" role="status" aria-live="polite" hidden>
+        <div class="zip-box">
+          <img id="zipPomLoading" class="bk-pom bk-px" data-pal="pom-loading" src="img/pom-loading.svg" alt="" width="160" height="88">
+          <img id="zipPomDone" class="bk-pom bk-px" data-pal="pom-done" src="img/pom-done.svg" alt="" width="160" height="88" hidden>
+          <div class="d-flex justify-content-between small text-body-secondary mt-3 mb-1"><span id="zipLabel">打包中</span><span id="zipCount"></span></div>
+          <div class="progress" role="progressbar" aria-label="打包進度"><div id="zipBar" class="progress-bar"></div></div>
+        </div>
+      </div>
+      </div>
       <!-- Mascot strip outside the output card: works at the computer → sticks the label on a box → naps (decorative) -->
       <img class="bk-strip d-none d-lg-block w-100 h-auto flex-shrink-0" data-pal="pom-pixel" data-holiday src="img/pom-pixel.svg" alt="" width="1344" height="72">
       </div>
