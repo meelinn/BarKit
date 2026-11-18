@@ -2,10 +2,11 @@
 function svgString(sized = false, src = out) {
   const clone = src.cloneNode(true);
   clone.setAttribute('xmlns', SVG_NS);
-  // Exported files can't see the page's fonts, so embed OCR-B when it's used
-  if (OCRB_FACE && clone.querySelector('text') && $('font').value === 'OCR-B') {
+  // Exported files can't see the page's fonts, so embed the shipped face when it's used
+  const face = clone.querySelector('text') && embeddedFace();
+  if (face) {
     const style = document.createElementNS(SVG_NS, 'style');
-    style.textContent = OCRB_FACE;
+    style.textContent = face;
     clone.prepend(style);
   }
   // Downloaded files state their size in mm, so they print at the real size (without the preview's

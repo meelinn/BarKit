@@ -302,5 +302,6 @@ render();
 // Re-check the zoom cap when the window size changes
 let zoomTimer;
 window.addEventListener('resize', () => { clearTimeout(zoomTimer); zoomTimer = setTimeout(applyZoom, 100); });
-// Re-render once OCR-B is ready so text width is measured with the real font
-if (OCRB_FACE) document.fonts.load('20px "OCR-B"').then(() => { checks.clear(); gridKey = ''; render(); }, () => {});
+// Re-render once the shipped fonts are ready so text width is measured with the real font
+Promise.all(Object.keys(EMBEDDED_FONTS).map(family => document.fonts.load(`20px "${family}"`)))
+  .then(() => { checks.clear(); gridKey = ''; render(); }, () => {});

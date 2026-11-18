@@ -159,8 +159,16 @@ const fontPx = x => {
 function textMetrics(text) {
   glyphCtx.font = `100px ${$('font').value === 'OCR-B' ? '"OCR-B"' : $('font').value}`;
   const m = glyphCtx.measureText(text);
-  return { height: (m.actualBoundingBoxAscent + m.actualBoundingBoxDescent) / 100, width: m.width / 100 };
+  return { height: (m.actualBoundingBoxAscent + m.actualBoundingBoxDescent) / 100, width: m.width / 100,
+    ascent: m.actualBoundingBoxAscent / 100 };
 }
+// Text margin (px) for bar width x, so the gap from the bars to the top of the glyphs is the 上距
+// set: JsBarcode puts the baseline one font size below the margin, and the glyphs only reach
+// part of that height (caps and digits leave the top of the em box empty)
+const textMarginPx = x => {
+  const size = fontPx(x);
+  return mmPx('textGap') - size * (1 - textMetrics(lines()[cur] || '0123456789').ascent);
+};
 // Number of modules (narrowest bar widths) in a 1D code, without margins or text
 const modulesCache = new Map();
 function modulesOf(fmt, text) {
@@ -209,7 +217,7 @@ function sizeFor(o, value, side, target) {
 // side margin or font size depends on the bar width x (px)
 function baseOpts(o, x) {
   return {
-    format: o.format, font: $('font').value, fontSize: fontPx(x), textMargin: 2,
+    format: o.format, font: $('font').value, fontSize: fontPx(x), textMargin: textMarginPx(x),
     margin: 0, marginTop: mmPx('marginY'), marginBottom: mmPx('marginY'),
     marginLeft: sideMargin(o, x), marginRight: sideMargin(o, x)
   };
@@ -226,7 +234,7 @@ function barcodeOpts(o, k) {
     height: r(bars.h),
     font: $('font').value,
     fontSize: r(fontPx(bars.x)),
-    textMargin: r(2),
+    textMargin: r(textMarginPx(bars.x)),   // gap between the bars and the text
     margin: 0, // JsBarcode falls back to `margin` when a side is 0, so 0 must mean 0
     marginTop: r(mmPx('marginY')),
     marginBottom: r(mmPx('marginY')),
@@ -267,7 +275,7 @@ function render1D(out, value, o) {
 const checks = new Map();
 let checksKey = '';
 const DRAW_IDS = ['format', 'lineColor', 'background', 'transparent', 'barWidth', 'height', 'font',
-                  'fontSize', 'fontAuto', 'marginY', 'marginX', 'marginAuto', 'ecLevel', 'cellSize', 'qrMargin'];
+                  'fontSize', 'fontAuto', 'textGap', 'marginY', 'marginX', 'marginAuto', 'ecLevel', 'cellSize', 'qrMargin'];
 function syncChecks() {
   const key = DRAW_IDS.map(id => isToggle($(id)) ? $(id).checked : $(id).value).join('|');
   if (key !== checksKey) { checks.clear(); checksKey = key; }

@@ -7,17 +7,18 @@
 <title>BarKit · 條碼產生器</title>
 <!-- ?v= on our own files (not vendor/): bump it on each deploy so browsers fetch the new versions
      instead of a cached copy (GitHub Pages lets them keep files for 10 minutes) -->
-<link rel="icon" href="img/favicon.svg?v=20261118b" type="image/svg+xml">
-<link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=20261118b">
-<script src="js/theme.js?v=20261118b"></script>
+<link rel="icon" href="img/favicon.svg?v=20261118c" type="image/svg+xml">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png?v=20261118c">
+<script src="js/theme.js?v=20261118c"></script>
 <link rel="stylesheet" href="vendor/bootstrap/bootstrap.min.css">
 <link rel="stylesheet" href="vendor/bootstrap-icons/bootstrap-icons.min.css">
 <script src="vendor/jsbarcode/JsBarcode.all.min.js"></script>
 <script src="vendor/qrcode-generator/qrcode.min.js"></script>
 <script src="vendor/jszip/jszip.min.js"></script>
-<script src="fonts/ocrb.js?v=20261118b"></script>
-<link rel="stylesheet" href="css/app.css?v=20261118b">
-<link rel="stylesheet" href="css/theme.css?v=20261118b">
+<script src="fonts/ocrb.js?v=20261118c"></script>
+<script src="fonts/opensans.js?v=20261118c"></script>
+<link rel="stylesheet" href="css/app.css?v=20261118c">
+<link rel="stylesheet" href="css/theme.css?v=20261118c">
 </head>
 <body class="bg-body-tertiary">
 <div class="container py-3 pb-lg-4 d-print-none">
@@ -139,15 +140,25 @@
             <div class="col-6">
               <div class="input-group input-group-sm">
                 <label for="font" class="input-group-text opt-label">字體</label>
-                <select id="font" class="form-select px-2">
-                  <option value="monospace">等寬</option>
-                  <option value="sans-serif">無襯線</option>
-                  <option value="OCR-B" selected>OCR-B</option>
+                <select id="font" class="form-select ps-2">
+                  <!-- system fonts: only named, not shipped (licensed for use, not for redistribution);
+                       where one is missing, sans-serif stands in, also in downloaded SVGs -->
+                  <option value="Arial, sans-serif" selected>Arial</option>
+                  <option value="'Microsoft JhengHei', '微軟正黑體', sans-serif">微軟正黑體</option>
+                  <option value="'HP Simplified Hans', sans-serif">HP Simplified Hans</option>
+                  <!-- shipped with the site (fonts/*.js): look the same everywhere, also in SVGs -->
+                  <option value="'Open Sans', sans-serif">Open Sans</option>
+                  <!-- (OCR-B: the GS1 standard face for the digits of retail codes) -->
+                  <option value="OCR-B">OCR-B</option>
+                  <!-- whatever the device uses for these generic families -->
+                  <option value="sans-serif">Sans Serif</option>
+                  <option value="monospace">Monospace</option>
                 </select>
               </div>
               <div class="form-text" id="fontHint" hidden>GS1 商品條碼標準字型</div>
             </div>
             <div class="col-6"><div class="input-group input-group-sm auto-group"><label for="fontSize" class="input-group-text opt-label">字級</label><input id="fontSize" class="form-control px-1" type="number" min="4" max="36" step="0.5" value="10"><span class="input-group-text px-1 unit">pt</span><input type="checkbox" class="btn-check" id="fontAuto" checked autocomplete="off"><label class="btn btn-outline-primary px-1 tip" for="fontAuto" title="依據線寬自動調整字級">自動</label></div></div>
+            <div class="col-6"><div class="input-group input-group-sm"><label for="textGap" class="input-group-text opt-label">上距</label><input id="textGap" class="form-control px-1" type="number" min="0" max="10" step="0.1" value="1"><span class="input-group-text px-1 unit">mm</span></div></div>
           </div>
         </div>
 
@@ -321,20 +332,20 @@
            the mascot making barcodes, then holding up the finished label, above the progress bar -->
       <div id="zipProgress" class="zip-overlay" role="status" aria-live="polite" hidden>
         <div class="zip-box">
-          <img id="zipPomLoading" class="bk-pom bk-px" data-pal="pom-loading" src="img/pom-loading.svg?v=20261118b" alt="" width="160" height="88">
-          <img id="zipPomDone" class="bk-pom bk-px" data-pal="pom-done" src="img/pom-done.svg?v=20261118b" alt="" width="160" height="88" hidden>
+          <img id="zipPomLoading" class="bk-pom bk-px" data-pal="pom-loading" src="img/pom-loading.svg?v=20261118c" alt="" width="160" height="88">
+          <img id="zipPomDone" class="bk-pom bk-px" data-pal="pom-done" src="img/pom-done.svg?v=20261118c" alt="" width="160" height="88" hidden>
           <div class="d-flex justify-content-between small text-body-secondary mt-3 mb-1"><span id="zipLabel">打包中</span><span id="zipCount"></span></div>
           <div class="progress" role="progressbar" aria-label="打包進度"><div id="zipBar" class="progress-bar"></div></div>
         </div>
       </div>
       </div>
       <!-- Mascot strip outside the output card: works at the computer → sticks the label on a box → naps (decorative) -->
-      <img class="bk-strip d-none d-lg-block w-100 h-auto flex-shrink-0" data-pal="pom-pixel" data-holiday src="img/pom-pixel.svg?v=20261118b" alt="" width="1344" height="72">
+      <img class="bk-strip d-none d-lg-block w-100 h-auto flex-shrink-0" data-pal="pom-pixel" data-holiday src="img/pom-pixel.svg?v=20261118c" alt="" width="1344" height="72">
       </div>
     </div>
     <!-- Phones/tablets: the mascot strip goes at the very bottom of the page instead -->
     <div class="col-12 order-3 d-lg-none">
-      <img class="bk-strip d-block w-100 h-auto" data-pal="pom-pixel" data-holiday src="img/pom-pixel.svg?v=20261118b" alt="" width="1344" height="72">
+      <img class="bk-strip d-block w-100 h-auto" data-pal="pom-pixel" data-holiday src="img/pom-pixel.svg?v=20261118c" alt="" width="1344" height="72">
     </div>
   </div>
 </div>
@@ -434,12 +445,12 @@
 <div id="srStatus" class="visually-hidden" role="status" aria-live="polite"></div>
 <script src="vendor/bootstrap/bootstrap.bundle.min.js"></script>
 
-<script src="js/core.js?v=20261118b"></script>
-<script src="js/formats.js?v=20261118b"></script>
-<script src="js/preview.js?v=20261118b"></script>
-<script src="js/export.js?v=20261118b"></script>
-<script src="js/print.js?v=20261118b"></script>
-<script src="js/storage.js?v=20261118b"></script>
-<script src="js/main.js?v=20261118b"></script>
+<script src="js/core.js?v=20261118c"></script>
+<script src="js/formats.js?v=20261118c"></script>
+<script src="js/preview.js?v=20261118c"></script>
+<script src="js/export.js?v=20261118c"></script>
+<script src="js/print.js?v=20261118c"></script>
+<script src="js/storage.js?v=20261118c"></script>
+<script src="js/main.js?v=20261118c"></script>
 </body>
 </html>
