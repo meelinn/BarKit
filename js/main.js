@@ -189,13 +189,15 @@ document.querySelectorAll('[name="theme"]').forEach(r => r.addEventListener('cha
 // Main color (top right): retro green, fresh blue or minimal white; remembered.
 // The mascot pictures have a color version per palette (img/<name>-blue.svg …); the strip
 // (data-holiday) also has a holiday version (img/pom-pixel-xmas-blue.svg …, see theme.js).
+// (with the same ?v= version as this script, see index.html)
+const ASSET_V = new URL(document.currentScript.src).search;
 const PALETTES = { paletteGreen: 'green', paletteBlue: 'blue', paletteWhite: 'white' };
 function applyPalette(p) {
   p === 'green' ? delete document.documentElement.dataset.bkPalette : (document.documentElement.dataset.bkPalette = p);
   const holiday = document.documentElement.dataset.bkHoliday;
   document.querySelectorAll('img[data-pal]').forEach(img => {
     const h = holiday && 'holiday' in img.dataset ? '-' + holiday : '';
-    img.src = `img/${img.dataset.pal}${h}${p === 'green' ? '' : '-' + p}.svg`;
+    img.src = `img/${img.dataset.pal}${h}${p === 'green' ? '' : '-' + p}.svg${ASSET_V}`;
   });
 }
 const currentPalette = document.documentElement.dataset.bkPalette || 'green';
