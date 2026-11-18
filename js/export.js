@@ -8,43 +8,21 @@ function svgString(sized = false, src = out) {
     style.textContent = OCRB_FACE;
     clone.prepend(style);
   }
-  return new XMLSerializer().serializeToString(sized ? fitSvg(clone) : clone);
+  // Downloaded files state their size in mm, so they print at the real size (without the preview's
+  // zoom style, id and classes)
+  if (sized) {
+    ['style', 'id', 'class'].forEach(a => clone.removeAttribute(a));
+    ['width', 'height'].forEach(a => clone.setAttribute(a, parseFloat(clone.getAttribute(a)) * MM_PER_PX + 'mm'));
+  }
+  return new XMLSerializer().serializeToString(clone);
 }
 
-// Target image size in mm (either side may be blank = auto)
 // Size units: mm, or px = CSS px (1/96 inch)
 const MM_PER_PX = 25.4 / 96;
 const isPx = () => $('sizeUnit').value === 'px';
 const pxToUnit = px => isPx() ? px : px * MM_PER_PX;
 const mmToUnit = mm => isPx() ? mm / MM_PER_PX : mm;
 const fmtSize = v => isPx() ? String(Math.round(v)) : v.toFixed(1);
-
-function targetMm() {
-  const k = isPx() ? MM_PER_PX : 1;
-  return { w: (+$('imgW').value || 0) * k, h: (+$('imgH').value || 0) * k };
-}
-
-// Wrap the barcode in an outer SVG of the requested mm size, scaled to fit and centered
-function fitSvg(inner) {
-  const t = targetMm();
-  if (!t.w && !t.h) return inner;
-  const [, , vw, vh] = inner.getAttribute('viewBox').split(/\s+/).map(Number);
-  const W = t.w || t.h * vw / vh, H = t.h || t.w * vh / vw;
-  const s = Math.min(W / vw, H / vh);
-  const outer = newSvg();
-  outer.setAttribute('xmlns', SVG_NS);
-  outer.setAttribute('width', W + 'mm');
-  outer.setAttribute('height', H + 'mm');
-  outer.setAttribute('viewBox', `0 0 ${W} ${H}`);
-  const bg = opts().background;
-  if (bg !== 'transparent') outer.innerHTML = `<rect width="100%" height="100%" fill="${bg}"/>`;
-  inner.setAttribute('x', (W - vw * s) / 2);
-  inner.setAttribute('y', (H - vh * s) / 2);
-  inner.setAttribute('width', vw * s);
-  inner.setAttribute('height', vh * s);
-  outer.appendChild(inner);
-  return outer;
-}
 
 // PNG at the chosen DPI. One CSS px = 1/96 inch; the narrowest bar (or QR cell)
 // is rounded to whole printer dots so every bar prints at the same width.
@@ -64,33 +42,8 @@ async function renderCanvas(k, value, svgEl) {
 // PNG of one item (default: the one shown). svgEl must already hold that item.
 async function toPngBlob(value = lines()[cur], svgEl = out) {
   const dpi = +$('dpi').value || 300, mod = moduleSize();
-  let dots = Math.max(1, Math.round(mod * dpi / 96)); // printer dots per bar/cell
-  const renderAt = k => renderCanvas(k, value, svgEl);
-  let canvas = await renderAt(dots / mod);
-
-  const t = targetMm();
-  if (t.w || t.h) {
-    // Largest whole-dot bar width that fits the requested size. Allow 5% over, since
-    // rounding bars down to whole dots can otherwise shrink them well below target
-    // (e.g. GS1 0.33 mm at 300 DPI = 3.9 dots: 4 dots is +3%, 3 dots is −23%).
-    const tw = Math.round(t.w / 25.4 * dpi), th = Math.round(t.h / 25.4 * dpi);
-    const fits = c => (!tw || c.width <= tw * 1.05) && (!th || c.height <= th * 1.05);
-    // The size grows almost linearly with the dots per bar: jump straight to the
-    // estimate, then the steps below only fine-tune by a dot or two
-    const est = Math.max(1, Math.min(200, Math.floor(Math.min(
-      tw ? tw * 1.05 / (canvas.width / dots) : Infinity,
-      th ? th * 1.05 / (canvas.height / dots) : Infinity))));
-    if (est !== dots) canvas = await renderAt((dots = est) / mod);
-    if (fits(canvas)) {
-      for (let next; dots < 200 && fits(next = await renderAt((dots + 1) / mod)); dots++) canvas = next;
-    } else {
-      while (!fits(canvas)) {
-        if (dots === 1) throw new Error('圖片尺寸太小，條碼放不下');
-        canvas = await renderAt(--dots / mod);
-      }
-    }
-    canvas = padCanvas(canvas, Math.max(tw, canvas.width), Math.max(th, canvas.height));
-  }
+  const dots = Math.max(1, Math.round(mod * dpi / 96)); // printer dots per bar/cell
+  const canvas = await renderCanvas(dots / mod, value, svgEl);
 
   const blob = await new Promise((res, rej) =>
     canvas.toBlob(b => b ? res(b) : rej(new Error('PNG 轉換失敗')), 'image/png'));

@@ -17,11 +17,12 @@ const GS1 = {
   EAN8:  { x: 0.33,  barH: 18.23, margin: 7,  xMin: 0.264, hMin: 14.58 },
   ITF14: { x: 0.495, barH: 31.75, margin: 10, xMin: 0.495, hMin: 31.75 }
 };
-// Size check for other 1D codes: X ≥ 0.25 mm (common scanner minimum), text glyphs
+// Size check for other 1D codes: X at least 2 printer dots at the chosen DPI (so every bar prints
+// evenly) and never under 0.127 mm (5 mil, the finest common hand-held scanners read), text glyphs
 // ≥ 2 mm high (GS1 HRI guideline), bars ≥ 5 mm and ≥ 15% of the symbol length
 // (ISO/IEC 15417 recommendation for hand-held scanning)
-const MIN_X = 0.25, MIN_TEXT = 2, MIN_BAR = 5;
-let sizeSide = 'imgW'; // output-size input the user typed; the other is derived
+const minX = () => Math.max(2 * 25.4 / (+$('dpi').value || 300), .127);
+const MIN_TEXT = 2, MIN_BAR = 5;
 
 function opts() {
   return {
@@ -138,37 +139,127 @@ function renderQR(out, value, o) {
     `<path d="${d}" fill="${o.lineColor}" shape-rendering="crispEdges"/>`;
 }
 
+// Side margin (px) of a 1D code for bar width x (px): as typed in mm, or left blank for the quiet
+// zone the format needs, in bar widths (GS1 codes per their spec, others 10, as Code 128 requires)
+const QUIET = 10;
+const autoMargin = (o, x) => ((GS1[o.format] || {}).margin ?? QUIET) * x;
+const sideMargin = (o, x) => $('marginAuto').checked ? autoMargin(o, x) : mmPx('marginX');
+// Font size (px) for bar width x (px): as typed, or automatic: in step with the bar width (10 pt at
+// 0.33 mm, the GS1 standard size), not below the size whose glyphs are MIN_TEXT mm high, and never
+// wider than the bars (wider text makes JsBarcode widen the image and centre the bars in it, which
+// leaves blank space at the sides; then the size check flags the small text instead). The size is
+// worked out for the item shown. GS1 codes place their digits by themselves, so no width limit
+const fontPx = x => {
+  if (!$('fontAuto').checked) return ptPx('fontSize');
+  const fmt = opts().format, text = lines()[cur] || '0123456789';
+  const m = textMetrics(text), size = Math.max(x / PX_PER_MM / .33 * 10 * PX_PER_PT, MIN_TEXT * PX_PER_MM / m.height * 1.01);
+  return GS1[fmt] ? size : Math.min(size, modulesOf(fmt, text) * x / m.width * .999);
+};
+// Glyph height and text width per px of font size, in the chosen font
+function textMetrics(text) {
+  glyphCtx.font = `100px ${$('font').value === 'OCR-B' ? '"OCR-B"' : $('font').value}`;
+  const m = glyphCtx.measureText(text);
+  return { height: (m.actualBoundingBoxAscent + m.actualBoundingBoxDescent) / 100, width: m.width / 100 };
+}
+// Number of modules (narrowest bar widths) in a 1D code, without margins or text
+const modulesCache = new Map();
+function modulesOf(fmt, text) {
+  const key = fmt + '|' + text;
+  if (!modulesCache.has(key)) {
+    const svg = document.createElementNS(SVG_NS, 'svg');
+    let ok = true;
+    JsBarcode(svg, text, { format: fmt, width: 1, height: 1, margin: 0, displayValue: false, valid: v => { ok = v; } });
+    if (modulesCache.size > 2000) modulesCache.clear();
+    modulesCache.set(key, ok ? parseFloat(svg.getAttribute('width')) : Infinity);
+  }
+  return modulesCache.get(key);
+}
+
+// Output size → the one setting that makes it: a width becomes the bar width (QR: cell size), a
+// height the bar height; everything else stays as set. Returns the field and its new value (mm),
+// or null when the value can't be drawn. Sizes are in CSS px.
+function sizeFor(o, value, side, target) {
+  if (o.format === 'QR') {
+    const cells = parseFloat(out.getAttribute('width')) / mmPx('cellSize', 1);   // square
+    return { id: 'cellSize', mm: target / cells / PX_PER_MM };
+  }
+  let ok = true;
+  const measure = (bx, bh) => drawFine(document.createElementNS(SVG_NS, 'svg'), value,
+    { ...baseOpts(o, bx), width: bx, height: bh, displayValue: true, valid: v => { ok = v; } });
+  const x = mmPx('barWidth', 0.33), h = mmPx('height', 8);
+  measure(x, h);
+  if (!ok) return null;
+  if (side === 'w') {
+    // The width always grows with the bar width (modules, automatic margins and text), though not
+    // linearly (automatic text stops at its minimum size): bisect between a too-small and a
+    // too-large bar width until the width is within about 0.01 mm
+    let lo = 0, hi = x;
+    while (measure(hi, h)[0] < target && hi < 1e4) { lo = hi; hi *= 2; }
+    while (hi - lo > .00005 * PX_PER_MM) {
+      const mid = (lo + hi) / 2;
+      measure(mid, h)[0] < target ? lo = mid : hi = mid;
+    }
+    return { id: 'barWidth', mm: lo / PX_PER_MM };   // the largest bar width that still fits
+  }
+  const [, total] = measure(x, h);
+  return { id: 'height', mm: (target - (total - h)) / PX_PER_MM };
+}
+
+// JsBarcode options other than the bar size (exact mm sizes, before any rounding); an automatic
+// side margin or font size depends on the bar width x (px)
+function baseOpts(o, x) {
+  return {
+    format: o.format, font: $('font').value, fontSize: fontPx(x), textMargin: 2,
+    margin: 0, marginTop: mmPx('marginY'), marginBottom: mmPx('marginY'),
+    marginLeft: sideMargin(o, x), marginRight: sideMargin(o, x)
+  };
+}
+
 // JsBarcode options; k scales every size so PNG export lands on whole printer dots
 function barcodeOpts(o, k) {
   // On screen (k = 1) keep exact mm sizes; for PNG round to whole printer dots
   const r = v => k === 1 ? v : Math.round(v * k);
+  const bars = { x: mmPx('barWidth', 0.33), h: mmPx('height', 8) };
   return {
     format: o.format,
-    width: r(mmPx('barWidth', 0.33)),
-    height: r(mmPx('height', 8)),
+    width: r(bars.x),
+    height: r(bars.h),
     font: $('font').value,
-    fontSize: r(ptPx('fontSize', 10)),
+    fontSize: r(fontPx(bars.x)),
     textMargin: r(2),
     margin: 0, // JsBarcode falls back to `margin` when a side is 0, so 0 must mean 0
     marginTop: r(mmPx('marginY')),
     marginBottom: r(mmPx('marginY')),
-    marginLeft: r(mmPx('marginX')),
-    marginRight: r(mmPx('marginX')),
+    marginLeft: r(sideMargin(o, bars.x)),
+    marginRight: r(sideMargin(o, bars.x)),
     displayValue: true,
     lineColor: o.lineColor,
     background: o.background
   };
 }
 
+// JsBarcode rounds the barcode area up to whole px (≈0.26 mm), so 1D codes are drawn FINE times
+// larger and shown at the real size through the viewBox: sizes then land within ≈0.03 mm
+const FINE = 10;
+const fineOpts = opts => Object.fromEntries(Object.entries(opts).map(([k, v]) =>
+  [k, ['width', 'height', 'fontSize', 'textMargin', 'marginTop', 'marginBottom', 'marginLeft', 'marginRight'].includes(k) ? v * FINE : v]));
+// Draw a 1D code into svg at FINE resolution; width/height attributes are the real size (CSS px)
+function drawFine(svg, value, opts) {
+  svg.innerHTML = '';
+  svg.removeAttribute('viewBox');
+  JsBarcode(svg, value, fineOpts(opts));
+  const w = parseFloat(svg.getAttribute('width')), h = parseFloat(svg.getAttribute('height'));
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);   // also lets the SVG scale down to fit a label
+  svg.setAttribute('width', w / FINE);
+  svg.setAttribute('height', h / FINE);
+  return [w / FINE, h / FINE];
+}
+
 function render1D(out, value, o) {
-  out.innerHTML = '';
-  out.removeAttribute('viewBox');
   let ok = true;
   // Thumbnails (o.thumb) skip the printed text; it would be too small to read
-  JsBarcode(out, value, { ...barcodeOpts(o, 1), displayValue: !o.thumb, valid: v => { ok = v; } });
+  drawFine(out, value, { ...barcodeOpts(o, 1), displayValue: !o.thumb, valid: v => { ok = v; } });
   if (!ok) throw new Error(`內容不符合 ${NAMES[o.format]} 格式`);
-  // viewBox lets the SVG scale down to fit a label
-  out.setAttribute('viewBox', `0 0 ${parseFloat(out.getAttribute('width'))} ${parseFloat(out.getAttribute('height'))}`);
 }
 
 // Validation result per value: { w, h } or { error }. Kept until a drawing option
@@ -176,7 +267,7 @@ function render1D(out, value, o) {
 const checks = new Map();
 let checksKey = '';
 const DRAW_IDS = ['format', 'lineColor', 'background', 'transparent', 'barWidth', 'height', 'font',
-                  'fontSize', 'marginY', 'marginX', 'ecLevel', 'cellSize', 'qrMargin'];
+                  'fontSize', 'fontAuto', 'marginY', 'marginX', 'marginAuto', 'ecLevel', 'cellSize', 'qrMargin'];
 function syncChecks() {
   const key = DRAW_IDS.map(id => isToggle($(id)) ? $(id).checked : $(id).value).join('|');
   if (key !== checksKey) { checks.clear(); checksKey = key; }
@@ -334,8 +425,8 @@ function updateDownloadAll(list) {
 const MAX_ZOOM = 2;
 const FILL = 0.82; // share of the free width / height the barcode may take
 
-// Space left for the barcode inside the canvas box (height is Infinity on phones,
-// or when the window is too short to measure a sensible height)
+// Space left for the barcode inside the canvas box (height is Infinity on phones, where the
+// page scrolls; at least 60px when the window is very short)
 function availSpace() {
   const area = $('previewArea');
   const gap = 16, pad = 32 + 2; // canvas padding + rounding slack
@@ -350,23 +441,16 @@ function availSpace() {
   // Toolbar above and the "n / N" line below the canvas (grid gap + nav margin)
   const tools = $('previewTools').offsetHeight + 4 + $('nav').offsetHeight + 16;
   const availH = area.clientHeight - others - tools - pad;
-  return { availW, availH: availH < 60 ? Infinity : availH };
+  return { availW, availH: Math.max(availH, 60) };
 }
 
-// Expected PNG pixel size, same rules as toPngBlob (whole printer dots per bar;
-// a target size, when set, defines the canvas)
+// Expected PNG pixel size, same rules as toPngBlob (whole printer dots per bar)
 function pngSizeText(dpi = +$('dpi').value || 300) {
   const w = parseFloat(out.getAttribute('width')), h = parseFloat(out.getAttribute('height'));
   if (!valid || !w || !h) return '';
   const mod = moduleSize();
   const k = Math.max(1, Math.round(mod * dpi / 96)) / mod;
-  const t = targetMm();
-  let pw = Math.round(w * k), ph = Math.round(h * k);
-  if (t.w || t.h) {
-    pw = Math.round((t.w || t.h * w / h) / 25.4 * dpi);
-    ph = Math.round((t.h || t.w * h / w) / 25.4 * dpi);
-  }
-  return `${pw} × ${ph}`;
+  return `${Math.round(w * k)} × ${Math.round(h * k)}`;
 }
 
 // Size the last valid barcode was shown at, so an item with an error keeps the
@@ -377,8 +461,9 @@ let lastShown = null;
 let setDims = null;
 
 // Each barcode is zoomed to fit on its own (FILL of the width, all of the height,
-// at most MAX_ZOOM), so a long item doesn't make the short ones small
-const fitZoom = (w, h, A) => Math.max(0.1, Math.min(MAX_ZOOM, A.availW * FILL / w, A.availH * FILL / h));
+// at most MAX_ZOOM), so a long item doesn't make the short ones small. The 0.01 floor is only a
+// safety net: even an extreme size shrinks to fit rather than pushing the buttons out of the card
+const fitZoom = (w, h, A) => Math.max(0.01, Math.min(MAX_ZOOM, A.availW * FILL / w, A.availH * FILL / h));
 // The canvas box is the largest of those shown sizes, so it keeps one size (and the
 // ‹ › stay put) while switching items
 function setBox(A) {
@@ -558,26 +643,26 @@ function render() {
     validateTimer = setTimeout(() => validate(true), 300);
   }
 
-  // Output size in the chosen unit (mm, or px = 1/96 inch): default size as
-  // placeholder; the side the user typed stays fixed, the other follows the aspect ratio
+  // Output size in the chosen unit (mm, or px = 1/96 inch): always the real size (not while the
+  // field is being typed in; leaving it converts the typed size, see main.js)
   const unit = $('sizeUnit').value;
   document.querySelectorAll('.unit-label').forEach(el => el.textContent = unit);
   const pw = parseFloat(out.getAttribute('width')), ph = parseFloat(out.getAttribute('height'));
-  $('imgW').placeholder = valid ? fmtSize(pxToUnit(pw)) : '依內容';
-  $('imgH').placeholder = valid ? fmtSize(pxToUnit(ph)) : '依內容';
-  if (!+$(sizeSide).value) { $('imgW').value = $('imgH').value = ''; }
-  else if (valid) {
-    const v = +$(sizeSide).value;
-    $(sizeSide === 'imgW' ? 'imgH' : 'imgW').value =
-      fmtSize(sizeSide === 'imgW' ? v * ph / pw : v * pw / ph);
-  }
-  $('sizeClear').hidden = !$('imgW').value;
+  // Automatic font size / side margin: the field shows the value in use (and can't be typed in)
+  const bx = mmPx('barWidth', 0.33);
+  ['fontSize', 'marginX'].forEach(id => $(id).disabled = $(id === 'fontSize' ? 'fontAuto' : 'marginAuto').checked);
+  if (valid && o.format !== 'QR') {
+    if ($('fontAuto').checked) $('fontSize').value = +(fontPx(bx) / PX_PER_PT).toFixed(1);
+    if ($('marginAuto').checked) $('marginX').value = +(autoMargin(o, bx) / PX_PER_MM).toFixed(2);
+  }  [['imgW', pw], ['imgH', ph]].forEach(([id, px]) => {
+    if (document.activeElement !== $(id)) $(id).value = valid ? fmtSize(pxToUnit(px)) : '';
+  });
   sizeCheck(o, pw);
   const g = GS1[o.format];
   $('gs1Btn').hidden = !g;
   if (g) {
     // Tooltip lists the values the button will apply for this format
-    const tip = `套用 GS1 標準：\n• 線寬 ${g.x} mm\n• 條碼高度 ${g.barH} mm\n• 左右空白區 ${+(g.margin * g.x).toFixed(2)} mm`;
+    const tip = `套用 GS1 標準：\n• 線寬 ${g.x} mm\n• 條碼高度 ${g.barH} mm\n• 左右邊距 自動`;
     const t = window.bootstrap && bootstrap.Tooltip.getInstance($('gs1Btn'));
     t ? t.setContent({ '.tooltip-inner': tip }) : $('gs1Btn').title = tip;
   }
@@ -603,44 +688,50 @@ const glyphCtx = document.createElement('canvas').getContext('2d');
 function textSize() {
   const t = [...out.querySelectorAll('text')];
   if (!t.length) return null;
-  const px = parseFloat(t[0].style.fontSize);
+  const drawn = parseFloat(t[0].style.fontSize);   // at FINE resolution
   glyphCtx.font = t[0].style.font;
   const m = glyphCtx.measureText(t.map(e => e.textContent).join(''));
-  const ratio = (m.actualBoundingBoxAscent + m.actualBoundingBoxDescent) / px;
-  return { pt: px / PX_PER_PT, minPt: MIN_TEXT * PX_PER_MM / ratio / PX_PER_PT };
+  const ratio = (m.actualBoundingBoxAscent + m.actualBoundingBoxDescent) / drawn;
+  return { pt: drawn / FINE / PX_PER_PT, minPt: MIN_TEXT * PX_PER_MM / ratio / PX_PER_PT };
 }
 
-// Under the output size: the sizes after scaling to the chosen output size, with a
-// warning for anything below the recommended minimum
+// Under the output size: the printed sizes, with a warning for anything below the recommended minimum
 function sizeCheck(o, pw) {
   const box = $('sizeCheck');
   box.hidden = !valid || o.format === 'QR';
   if (box.hidden) return;
   const g = GS1[o.format] || {};
-  const x = +$('barWidth').value || 0.33, barH = +$('height').value || 8;
-  const len = pw / PX_PER_MM - 2 * (+$('marginX').value || 0); // bars only, without quiet zones
-  // Named like the options above. min(s): smallest allowed value once scaled by s
-  // (the 15% rule scales with the symbol)
+  const bx = mmPx('barWidth', 0.33), x = bx / PX_PER_MM, barH = mmPx('height', 8) / PX_PER_MM;
+  const len = (pw - 2 * sideMargin(o, bx)) / PX_PER_MM; // bars only, without quiet zones
+  // Named like the options above, with the smallest recommended value of each and a one-click fix
+  // that sets it (rounded up to the field's step); the output size follows
   const ts = textSize();
+  const up = (v, step) => Math.ceil(v / step - 1e-9) * step;
   const items = [
-    { name: '線寬', unit: 'mm', v: x, min: () => g.xMin || MIN_X },
-    { name: '高度', unit: 'mm', v: barH, min: s => g.hMin || Math.max(MIN_BAR, len * s * 0.15) },
-    ts && { name: '字級', unit: 'pt', v: ts.pt, min: () => ts.minPt }
+    { name: '線寬', unit: 'mm', v: x, min: () => g.xMin || minX(),
+      fix: m => { $('barWidth').value = +up(m, .01).toFixed(2); } },
+    { name: '高度', unit: 'mm', v: barH, min: () => g.hMin || Math.max(MIN_BAR, len * 0.15),
+      fix: m => { $('height').value = +up(m, .01).toFixed(2); } },
+    // (a fixed size: the automatic one already keeps to the minimum)
+    ts && { name: '字級', unit: 'pt', v: ts.pt, min: () => ts.minPt,
+      fix: m => { $('fontAuto').checked = false; $('fontSize').value = up(m, .5); } }
   ].filter(Boolean);
-  const tw = targetMm().w;
-  const s = tw ? tw / (pw / PX_PER_MM) : 1; // scale of the exported image
-  const isBad = i => i.v * s < i.min(s) - 1e-6;
-  // Without an output size only a problem is worth showing
-  if (!tw && !items.some(isBad)) { box.hidden = true; return; }
+  const isBad = i => i.v < i.min() - 1e-6;
   const fix = v => +v.toFixed(2);
   const el = (tag, cls, text) => Object.assign(document.createElement(tag), { className: cls, textContent: text || '' });
   box.replaceChildren(...items.map(i => {
     const bad = isBad(i);
     const col = el('div', 'col-4'), cell = el('div', 'size-cell' + (bad ? ' bad' : ''));
-    const val = el('div', 'size-val', `${fix(i.v * s)} ${i.unit} `);
+    const val = el('div', 'size-val', `${fix(i.v)} ${i.unit} `);
     val.appendChild(Object.assign(el('i', bad ? 'bi bi-exclamation-triangle-fill' : 'bi bi-check-circle-fill text-success'),
       { ariaLabel: bad ? '低於建議' : '符合建議' }));
-    cell.append(el('div', 'text-body-secondary', i.name), val, el('div', 'size-min', `建議 ≥ ${fix(i.min(s))}`));
+    cell.append(el('div', 'text-body-secondary', i.name), val, el('div', 'size-min', `建議 ≥ ${fix(i.min())}`));
+    if (bad) {
+      const btn = el('button', 'btn btn-sm btn-outline-danger py-0 mt-1', '修正');
+      btn.type = 'button';
+      btn.onclick = () => { i.fix(i.min()); render(); };
+      cell.appendChild(btn);
+    }
     col.appendChild(cell);
     return col;
   }));

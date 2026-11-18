@@ -46,18 +46,13 @@ $('clearConfirm').onclick = () => {
   cur = 0;
   render();
 };
-// Switching unit converts the typed size (registered before render, which fills the other side)
-$('sizeUnit').addEventListener('input', () => {
-  const v = +$(sizeSide).value;
-  if (v) $(sizeSide).value = fmtSize(isPx() ? v / MM_PER_PX : v * MM_PER_PX);
-});
-
+// Output size back to the default: the settings that make it (bar width, bar height, QR cell)
 $('sizeClear').onclick = () => {
-  $('imgW').value = $('imgH').value = '';
+  ['barWidth', 'height', 'cellSize'].forEach(id => $(id).value = $(id).defaultValue);
   render();
 };
 
-// Reset every display option (incl. output size) to the defaults written in the HTML
+// Reset every display option to the defaults written in the HTML
 $('resetDisplay').onclick = () => {
   DISPLAY_FIELDS.forEach(id => {
     const el = $(id);
@@ -66,23 +61,19 @@ $('resetDisplay').onclick = () => {
       el.value = ([...el.options].find(op => op.defaultSelected) || el.options[0]).value;
     else el.value = el.defaultValue;
   });
-  sizeSide = 'imgW';
   render();
 };
 
 // GS1 size: recommended narrowest bar, nominal bar height, quiet zones per spec.
-// Options are in mm, so the natural size is already exact: clear any output size.
 $('gs1Btn').onclick = () => {
   const g = GS1[opts().format];
   if (!g) return;
   $('barWidth').value = g.x;
   $('height').value = g.barH;
-  $('marginX').value = +(g.margin * g.x).toFixed(2);
-  $('imgW').value = $('imgH').value = '';
-  sizeSide = 'imgW';
+  $('marginAuto').checked = true; // automatic: the quiet zone of this format
   render();
   flash($('gs1Btn'), '已套用', true, `已套用 GS1 標準：線寬 ${g.x} mm、條碼高度 ${g.barH} mm、` +
-        `左右邊距 ${$('marginX').value} mm`);
+        '左右邊距 自動');
 };
 
 // Jump to the first other item with an error
@@ -253,8 +244,30 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft') go(-1);
   if (e.key === 'ArrowRight') go(1);
 });
-// Remember which size side the user typed (registered before render, which fills the other)
-['imgW', 'imgH'].forEach(id => $(id).addEventListener('input', () => { sizeSide = id; }));
+// Output size: typing a width or height and leaving the field (or Enter) turns it into the bar width
+// or bar height (QR: cell size) once; the field then shows the real size again. With the aspect
+// ratio locked, the other side is worked out from the current ratio and applied too
+['imgW', 'imgH'].forEach(id => $(id).addEventListener('change', () => {
+  const v = +$(id).value, value = lines()[cur], o = opts();
+  if (v > 0 && valid && value) {
+    const pw = parseFloat(out.getAttribute('width')), ph = parseFloat(out.getAttribute('height'));
+    const px = isPx() ? v : v * PX_PER_MM;
+    let tw = id === 'imgW' ? px : 0, th = id === 'imgH' ? px : 0;
+    if ($('sizeLock').checked) tw ? (th = tw * ph / pw) : (tw = th * pw / ph);
+    const apply = (side, target) => {
+      const r = sizeFor(o, value, side, target);
+      if (!r) return;
+      const el = $(r.id);
+      el.value = +Math.max(+el.min || 0, r.mm).toFixed(5);   // too small: the smallest allowed setting
+    };
+    // Width first: the bar width it sets also changes the height (automatic text and margins)
+    if (tw) apply('w', tw);
+    if (th && !(o.format === 'QR' && tw)) apply('h', th);   // QR is square: the width already did it
+  }
+  render();
+}));
+$('imgW').addEventListener('keydown', e => { if (e.key === 'Enter') e.target.blur(); });
+$('imgH').addEventListener('keydown', e => { if (e.key === 'Enter') e.target.blur(); });
 // Content fields take no spaces (typed or pasted); line breaks stay. Registered before render
 const SPACES = /[ \t\u3000]/g; // half-width space, tab, full-width space
 CONTENT_IDS.forEach(id => $(id).addEventListener('input', () => {
@@ -265,9 +278,24 @@ CONTENT_IDS.forEach(id => $(id).addEventListener('input', () => {
   el.setSelectionRange(caret, caret);
 }));
 
+// Number fields: a typed value outside min/max (the browser only limits the arrows) snaps to the
+// nearest bound when the field is left or Enter is pressed, so no extreme size gets drawn
+const clampNum = el => {
+  if (el.value === '' || el.validity.valid) return false;
+  const v = +el.value, min = el.min === '' ? -Infinity : +el.min, max = el.max === '' ? Infinity : +el.max;
+  if (v >= min && v <= max) return false;   // invalid for another reason (e.g. step): leave it
+  el.value = Math.min(max, Math.max(min, v));
+  return true;
+};
+document.addEventListener('change', e => {
+  if (e.target.matches('input[type="number"]') && clampNum(e.target))
+    e.target.dispatchEvent(new Event('input', { bubbles: true }));
+});
+
 fields.forEach(id => $(id).addEventListener('input', render));
 load();
-if (!$('imgW').value && $('imgH').value) sizeSide = 'imgH';
+// Values saved before a range was narrowed are brought back in range too
+document.querySelectorAll('input[type="number"]').forEach(clampNum);
 render();
 // Re-check the zoom cap when the window size changes
 let zoomTimer;

@@ -124,10 +124,13 @@
           <div class="small fw-semibold text-body-secondary mb-3">條碼外觀</div>
           <!-- Label sits inside each field (prefix), so every option takes one line -->
           <div class="row g-2">
-            <div class="col-6"><div class="input-group input-group-sm"><label for="barWidth" class="input-group-text opt-label">線寬</label><input id="barWidth" class="form-control px-2" type="number" min="0.1" max="2" step="0.01" value="0.33"><span class="input-group-text px-2">mm</span></div></div>
-            <div class="col-6"><div class="input-group input-group-sm"><label for="height" class="input-group-text opt-label">高度</label><input id="height" class="form-control px-2" type="number" min="2" max="100" step="0.01" value="8"><span class="input-group-text px-2">mm</span></div></div>
-            <div class="col-6"><div class="input-group input-group-sm"><label for="marginY" class="input-group-text opt-label">上下邊距</label><input id="marginY" class="form-control px-2" type="number" min="0" max="30" step="0.1" value="0"><span class="input-group-text px-2">mm</span></div></div>
-            <div class="col-6"><div class="input-group input-group-sm"><label for="marginX" class="input-group-text opt-label">左右邊距</label><input id="marginX" class="form-control px-2" type="number" min="0" max="30" step="0.01" value="3.3"><span class="input-group-text px-2">mm</span></div></div>
+            <div class="col-6"><div class="input-group input-group-sm"><label for="barWidth" class="input-group-text opt-label">線寬</label><input id="barWidth" class="form-control px-2" type="number" min="0.1" max="10" step="0.01" value="0.33"><span class="input-group-text px-2 unit">mm</span></div></div>
+            <div class="col-6"><div class="input-group input-group-sm"><label for="height" class="input-group-text opt-label">高度</label><input id="height" class="form-control px-2" type="number" min="2" max="100" step="0.01" value="8"><span class="input-group-text px-2 unit">mm</span></div></div>
+          </div>
+          <div class="form-text fw-semibold mt-2 mb-1">邊距</div>
+          <div class="row g-2">
+            <div class="col-6"><div class="input-group input-group-sm"><label for="marginY" class="input-group-text opt-label">上下</label><input id="marginY" class="form-control px-2" type="number" min="0" max="30" step="0.01" value="0"><span class="input-group-text px-2 unit">mm</span></div></div>
+            <div class="col-6"><div class="input-group input-group-sm auto-group"><label for="marginX" class="input-group-text opt-label">左右</label><input id="marginX" class="form-control px-2" type="number" min="0" max="30" step="0.01" value="3.3"><span class="input-group-text px-2 unit">mm</span><input type="checkbox" class="btn-check" id="marginAuto" checked autocomplete="off"><label class="btn btn-outline-primary px-2 tip" for="marginAuto" title="依據線寬保留足夠的掃描留白">自動</label></div></div>
           </div>
           <div class="small fw-semibold text-body-secondary mt-4 mb-3">文字</div>
           <div class="row g-2">
@@ -142,7 +145,7 @@
               </div>
               <div class="form-text" id="fontHint" hidden>GS1 商品條碼標準字型</div>
             </div>
-            <div class="col-6"><div class="input-group input-group-sm"><label for="fontSize" class="input-group-text opt-label">字級</label><input id="fontSize" class="form-control px-2" type="number" min="4" max="36" step="0.5" value="10"><span class="input-group-text px-2">pt</span></div></div>
+            <div class="col-6"><div class="input-group input-group-sm auto-group"><label for="fontSize" class="input-group-text opt-label">字級</label><input id="fontSize" class="form-control px-2" type="number" min="4" max="36" step="0.5" value="10"><span class="input-group-text px-2 unit">pt</span><input type="checkbox" class="btn-check" id="fontAuto" checked autocomplete="off"><label class="btn btn-outline-primary px-2 tip" for="fontAuto" title="依據線寬自動調整字級">自動</label></div></div>
           </div>
         </div>
 
@@ -160,8 +163,8 @@
                 </select>
               </div>
             </div>
-            <div class="col-6"><div class="input-group input-group-sm"><label for="cellSize" class="input-group-text opt-label">模組</label><input id="cellSize" class="form-control px-2" type="number" min="0.2" max="5" step="0.1" value="1"><span class="input-group-text px-2">mm</span></div></div>
-            <div class="col-6"><div class="input-group input-group-sm"><label for="qrMargin" class="input-group-text opt-label">邊距</label><input id="qrMargin" class="form-control px-2" type="number" min="0" max="10" value="4"><span class="input-group-text px-2">格</span></div></div>
+            <div class="col-6"><div class="input-group input-group-sm"><label for="cellSize" class="input-group-text opt-label">模組</label><input id="cellSize" class="form-control px-2" type="number" min="0.2" max="5" step="0.1" value="1"><span class="input-group-text px-2 unit">mm</span></div></div>
+            <div class="col-6"><div class="input-group input-group-sm"><label for="qrMargin" class="input-group-text opt-label">邊距</label><input id="qrMargin" class="form-control px-2" type="number" min="0" max="10" value="4"><span class="input-group-text px-2 unit">格</span></div></div>
           </div>
         </div>
 
@@ -176,24 +179,25 @@
         </div>
 
         <div class="d-flex align-items-center gap-2 mt-4 mb-3">
-          <span class="small fw-semibold text-body-secondary me-auto">輸出尺寸<i class="tip bi bi-info-circle ms-1 text-primary" tabindex="0" role="img" aria-label="輸出尺寸說明" title="填入後可檢查線寬、高度、字級是否符合規範"></i></span>
+          <span class="small fw-semibold text-body-secondary me-auto">輸出尺寸<i class="tip bi bi-info-circle ms-1 text-primary" tabindex="0" role="img" aria-label="輸出尺寸說明" title="顯示實際輸出尺寸&#10;修改寬或高，會換算成線寬或條碼高度，並檢查是否符合規範"></i></span>
           <select id="sizeUnit" class="form-select form-select-sm py-0 w-auto" aria-label="尺寸單位" title="px 為畫面像素，1 px = 1/96 英寸">
             <option value="mm" selected>mm</option>
             <option value="px">px</option>
           </select>
-          <button id="sizeClear" type="button" class="tip btn btn-sm btn-outline-secondary py-0" title="恢復預設尺寸" aria-label="恢復預設尺寸" hidden><i class="bi bi-arrow-counterclockwise"></i></button>
+          <button id="sizeClear" type="button" class="tip btn btn-sm btn-outline-secondary py-0" title="恢復預設尺寸" aria-label="恢復預設尺寸"><i class="bi bi-arrow-counterclockwise"></i></button>
         </div>
         <div class="d-flex align-items-center gap-1">
           <div class="input-group input-group-sm flex-fill">
             <label for="imgW" class="input-group-text opt-label">寬</label>
             <input id="imgW" class="form-control px-2" type="number" min="1" step="0.1" aria-label="輸出寬度">
-            <span class="input-group-text px-2 unit-label">px</span>
+            <span class="input-group-text px-2 unit unit-label">px</span>
           </div>
-          <i class="bi bi-link-45deg text-body-secondary" aria-hidden="true"></i>
+          <input type="checkbox" class="btn-check" id="sizeLock" autocomplete="off">
+          <label class="btn btn-sm btn-outline-primary py-0 px-2 tip" for="sizeLock" title="鎖定寬高比" aria-label="鎖定寬高比"><i class="bi bi-unlock lock-off"></i><i class="bi bi-lock-fill lock-on"></i></label>
           <div class="input-group input-group-sm flex-fill">
             <label for="imgH" class="input-group-text opt-label">高</label>
             <input id="imgH" class="form-control px-2" type="number" min="1" step="0.1" aria-label="輸出高度">
-            <span class="input-group-text px-2 unit-label">px</span>
+            <span class="input-group-text px-2 unit unit-label">px</span>
           </div>
         </div>
         <div class="row g-2 mt-0 small" id="sizeCheck" aria-live="polite" hidden></div>
@@ -387,14 +391,14 @@
                 <div class="input-group">
                   <span class="input-group-text opt-label">往右</span>
                   <input id="printOffX" class="form-control px-2" type="number" step="0.5" value="0" aria-label="往右偏移 mm">
-                  <span class="input-group-text opt-label">mm</span>
+                  <span class="input-group-text opt-label unit">mm</span>
                 </div>
               </div>
               <div class="col-6">
                 <div class="input-group">
                   <span class="input-group-text opt-label">往下</span>
                   <input id="printOffY" class="form-control px-2" type="number" step="0.5" value="0" aria-label="往下偏移 mm">
-                  <span class="input-group-text opt-label">mm</span>
+                  <span class="input-group-text opt-label unit">mm</span>
                 </div>
               </div>
             </div>

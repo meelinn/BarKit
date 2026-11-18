@@ -13,9 +13,9 @@ const OCRB_FACE = window.OCRB_BASE64
 if (OCRB_FACE) document.head.appendChild(Object.assign(document.createElement('style'), { textContent: OCRB_FACE }));
 // Content inputs (both modes) and display options (「恢復預設」 resets these)
 const CONTENT_IDS = ['value', 'bPrefix', 'bSuffix', 'bStart', 'bEnd', 'bStep'];
-const DISPLAY_FIELDS = ['barWidth', 'height', 'font', 'fontSize', 'marginY', 'marginX',
+const DISPLAY_FIELDS = ['barWidth', 'height', 'font', 'fontSize', 'fontAuto', 'marginY', 'marginX', 'marginAuto', 'sizeLock',
                         'ecLevel', 'cellSize', 'qrMargin', 'lineColor', 'background', 'transparent',
-                        'sizeUnit', 'imgW', 'imgH'];
+                        'sizeUnit'];
 // Everything remembered between visits
 const fields = ['format', 'modeText', 'modeBatch', 'multiLine', ...CONTENT_IDS, ...DISPLAY_FIELDS, 'dpi',
                 'printOffX', 'printOffY', 'printLayout', 'printStart', 'printCols', 'printRows', 'viewOne', 'viewAll'];
