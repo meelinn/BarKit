@@ -18,12 +18,11 @@
 <link rel="stylesheet" href="css/theme.css">
 </head>
 <body class="bg-body-tertiary">
-<div class="container py-3 py-lg-4 d-print-none">
-  <div class="mb-3 d-flex align-items-center justify-content-between">
-    <!-- Brand mark (decorative; the page title for screen readers is the h1 below) -->
-    <div class="bk-brand" aria-hidden="true"><span class="bk-bars"></span><span>BarK<span class="bk-i">i</span>t</span><span class="bk-tag">TOOLBOX</span></div>
+<div class="container py-3 pt-lg-3 pb-lg-4 d-print-none">
+  <!-- Theme color + day/night: own row laid over the brand row, so it stays put on desktop -->
+  <div class="top-tools d-flex align-items-center justify-content-end">
     <!-- Theme color (the swatches are the buttons), next to the day/night switch -->
-    <div class="bk-palette d-flex align-items-center gap-2 ms-auto me-2 me-sm-0" role="radiogroup" aria-label="主題色">
+    <div class="bk-palette d-flex align-items-center gap-2 ms-auto me-3 me-sm-0" role="radiogroup" aria-label="主題色">
       <input type="radio" class="btn-check" name="palette" id="paletteGreen" checked>
       <label class="bk-swatch bk-swatch-green tip" data-bs-placement="bottom" for="paletteGreen" title="復古綠" aria-label="復古綠"></label>
       <input type="radio" class="btn-check" name="palette" id="paletteBlue">
@@ -38,6 +37,10 @@
       <input type="radio" class="btn-check" name="theme" id="themeDark">
       <label class="tip btn btn-outline-secondary" data-bs-placement="bottom" for="themeDark" title="夜間模式" aria-label="夜間模式"><i class="bi bi-moon-stars"></i></label>
     </div>
+  </div>
+  <div class="brand-row mb-3 d-flex align-items-center">
+    <!-- Brand mark (decorative; the page title for screen readers is the h1 below) -->
+    <div class="bk-brand" aria-hidden="true"><span class="bk-bars"></span><span>BarK<span class="bk-i">i</span>t</span><span class="bk-tag">TOOLBOX</span></div>
   </div>
   <div class="row g-3">
     <!-- Content & settings: first in the page (Tab order), left on desktop -->
@@ -173,7 +176,7 @@
         </div>
 
         <div class="d-flex align-items-center gap-2 mt-4 mb-3">
-          <span class="small fw-semibold text-body-secondary me-auto">輸出尺寸<i class="tip bi bi-info-circle ms-1" tabindex="0" role="img" aria-label="輸出尺寸說明" title="填入後可檢查線寬、高度、字級是否符合規範"></i></span>
+          <span class="small fw-semibold text-body-secondary me-auto">輸出尺寸<i class="tip bi bi-info-circle ms-1 text-primary" tabindex="0" role="img" aria-label="輸出尺寸說明" title="填入後可檢查線寬、高度、字級是否符合規範"></i></span>
           <select id="sizeUnit" class="form-select form-select-sm py-0 w-auto" aria-label="尺寸單位" title="px 為畫面像素，1 px = 1/96 英寸">
             <option value="mm" selected>mm</option>
             <option value="px">px</option>

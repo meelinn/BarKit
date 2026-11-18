@@ -1,5 +1,10 @@
 /* ---------- Preview ---------- */
 #topBar { min-height: 31px; }
+/* Top row: theme controls in their own row laid over the brand row (both 31px), so they can stay
+   put on desktop; the empty part lets clicks through */
+.top-tools { height: 31px; margin-bottom: -31px; position: relative; z-index: 1020; pointer-events: none; }
+.top-tools > * { pointer-events: auto; }
+.brand-row { min-height: 31px; }
 .canvas-wrap {
   /* The barcode never scrolls (zoom is capped to fit), but this box may still shrink:
      it is the one item allowed to shrink (min-width/min-height: 0), so the toolbar,
@@ -157,10 +162,13 @@ html { scrollbar-color: color-mix(in srgb, var(--bs-primary) 55%, var(--bk-bg)) 
 }
 /* Desktop: the page scrolls; the preview card sticks and fills the viewport height */
 @media (min-width: 992px) {
-  /* Stick where the card starts (page padding + theme row + its margin = 2.5rem + 31px) and end at
-     the page padding (1px spare: the left column can end on a fraction of a pixel), so it never
-     slides while scrolling */
-  .preview-col { position: sticky; top: calc(2.5rem + 31px); height: min(calc(100vh - 4rem - 32px), 100%); }
+  /* Stick where the card starts (page top padding 1rem + top row + its 1rem margin = 2rem + 31px) and
+     end at the bottom padding (1px spare: the left column can end on a fraction of a pixel), so it
+     never slides while scrolling */
+  .preview-col { position: sticky; top: calc(2rem + 31px); height: min(calc(100vh - 3.5rem - 32px), 100%); }
+  /* Theme color + day/night stay where they are while the brand scrolls away, so the space above
+     the card is never empty (no background needed: only the card is below them) */
+  .top-tools { position: sticky; top: 1rem; }
   /* The right column takes no height of its own (contain: size), so the row is as tall as the
      left column and the preview (100% above) never ends lower than it */
   .row > :has(> .preview-col) { contain: size; }
