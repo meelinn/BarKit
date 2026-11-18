@@ -2,8 +2,9 @@
 #topBar { min-height: 31px; }
 /* Aspect-ratio lock: open padlock when off, closed when on */
 #sizeLock:checked + label .lock-off, #sizeLock:not(:checked) + label .lock-on { display: none; }
-/* Fields with an 自動 switch (full-width rows, so the value, unit and switch all fit) */
-.auto-group > .btn { white-space: nowrap; }
+/* Fields with an 自動 switch: px-1 on the field, unit and switch (index.html) so all fit in a
+   half-width column; the switch text a touch larger, to look as big as the unit beside it */
+.auto-group > .btn { white-space: nowrap; font-size: .8125rem; }
 /* Top row: theme controls in their own row laid over the brand row (both 31px), so they can stay
    put on desktop; the empty part lets clicks through */
 .top-tools { height: 31px; margin-bottom: -31px; position: relative; z-index: 1020; pointer-events: none; }
