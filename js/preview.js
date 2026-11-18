@@ -1,19 +1,26 @@
 // Input parsing, drawing and the preview (single and whole-set view)
 let valid = false;
 let cur = 0; // index of the line shown in preview
-// GS1 General Specifications, 100% magnification (via GS1 Sweden size guide):
-// X-dimension 0.330 mm and nominal bar height per symbol. `margin` is the
+// GS1 General Specifications (via GS1 Sweden size guide): recommended
+// X-dimension (mm) and bar height (mm) per symbol. `margin` is the
 // symmetric side margin (in modules) that meets the minimum quiet zones, given the
 // blank modules JsBarcode already reserves for the outside digits (measured):
 //   EAN-13: 12 blank on the left; needs 11 left / 7 right  -> margin 7
 //   UPC-A:  8 blank each side;   needs 9 each side         -> margin 1
 //   EAN-8:  none;                needs 7 each side         -> margin 7
-const GS1_X = 0.33;
+//   ITF-14: none;                needs 10 each side        -> margin 10
+// (ITF-14 bearer bars are not drawn by JsBarcode)
+// xMin / hMin: smallest X-dimension and bar height in the same table (UPC-A is not listed)
 const GS1 = {
-  EAN13: { barH: 22.85, margin: 7 },
-  UPC:   { barH: 22.85, margin: 1 },
-  EAN8:  { barH: 18.23, margin: 7 }
+  EAN13: { x: 0.33,  barH: 22.85, margin: 7,  xMin: 0.264, hMin: 18.28 },
+  UPC:   { x: 0.33,  barH: 22.85, margin: 1 },
+  EAN8:  { x: 0.33,  barH: 18.23, margin: 7,  xMin: 0.264, hMin: 14.58 },
+  ITF14: { x: 0.495, barH: 31.75, margin: 10, xMin: 0.495, hMin: 31.75 }
 };
+// Size check for other 1D codes: X ≥ 0.25 mm (common scanner minimum), text glyphs
+// ≥ 2 mm high (GS1 HRI guideline), bars ≥ 5 mm and ≥ 15% of the symbol length
+// (ISO/IEC 15417 recommendation for hand-held scanning)
+const MIN_X = 0.25, MIN_TEXT = 2, MIN_BAR = 5;
 let sizeSide = 'imgW'; // output-size input the user typed; the other is derived
 
 function opts() {
@@ -116,7 +123,7 @@ function renderQR(out, value, o) {
   qr.addData(unescape(encodeURIComponent(value)), 'Byte'); // UTF-8
   qr.make();
   const n = qr.getModuleCount();
-  const cell = +$('cellSize').value || 8;
+  const cell = mmPx('cellSize', 1);
   const m = +$('qrMargin').value || 0;
   const size = (n + m * 2) * cell;
   let d = '';
@@ -133,18 +140,20 @@ function renderQR(out, value, o) {
 
 // JsBarcode options; k scales every size so PNG export lands on whole printer dots
 function barcodeOpts(o, k) {
-  const r = v => Math.round(v * k);
+  // On screen (k = 1) keep exact mm sizes; for PNG round to whole printer dots
+  const r = v => k === 1 ? v : Math.round(v * k);
   return {
     format: o.format,
-    width: r(+$('barWidth').value || 2),
-    height: r(+$('height').value || 100),
+    width: r(mmPx('barWidth', 0.33)),
+    height: r(mmPx('height', 8)),
     font: $('font').value,
-    fontSize: r(+$('fontSize').value || 20),
+    fontSize: r(ptPx('fontSize', 10)),
     textMargin: r(2),
-    marginTop: r(+$('marginY').value),
-    marginBottom: r(+$('marginY').value),
-    marginLeft: r(+$('marginX').value),
-    marginRight: r(+$('marginX').value),
+    margin: 0, // JsBarcode falls back to `margin` when a side is 0, so 0 must mean 0
+    marginTop: r(mmPx('marginY')),
+    marginBottom: r(mmPx('marginY')),
+    marginLeft: r(mmPx('marginX')),
+    marginRight: r(mmPx('marginX')),
     displayValue: true,
     lineColor: o.lineColor,
     background: o.background
@@ -563,7 +572,15 @@ function render() {
       fmtSize(sizeSide === 'imgW' ? v * ph / pw : v * pw / ph);
   }
   $('sizeClear').hidden = !$('imgW').value;
-  $('gs1Btn').hidden = !GS1[o.format];
+  sizeCheck(o, pw);
+  const g = GS1[o.format];
+  $('gs1Btn').hidden = !g;
+  if (g) {
+    // Tooltip lists the values the button will apply for this format
+    const tip = `套用 GS1 標準：\n• 線寬 ${g.x} mm\n• 條碼高度 ${g.barH} mm\n• 左右空白區 ${+(g.margin * g.x).toFixed(2)} mm`;
+    const t = window.bootstrap && bootstrap.Tooltip.getInstance($('gs1Btn'));
+    t ? t.setContent({ '.tooltip-inner': tip }) : $('gs1Btn').title = tip;
+  }
 
   // With one item the counter and ‹ › stay in place but invisible, so the preview
   // keeps the same size when a second item is added
@@ -578,6 +595,55 @@ function render() {
   // Last, once the messages and buttons above/below the canvas are in place
   applyZoom();
   save();
+}
+
+// Printed font size (pt; JsBarcode may cap it for EAN/UPC) and the smallest size whose
+// glyphs are still MIN_TEXT mm high (glyph height / font size differs per font)
+const glyphCtx = document.createElement('canvas').getContext('2d');
+function textSize() {
+  const t = [...out.querySelectorAll('text')];
+  if (!t.length) return null;
+  const px = parseFloat(t[0].style.fontSize);
+  glyphCtx.font = t[0].style.font;
+  const m = glyphCtx.measureText(t.map(e => e.textContent).join(''));
+  const ratio = (m.actualBoundingBoxAscent + m.actualBoundingBoxDescent) / px;
+  return { pt: px / PX_PER_PT, minPt: MIN_TEXT * PX_PER_MM / ratio / PX_PER_PT };
+}
+
+// Under the output size: the sizes after scaling to the chosen output size, with a
+// warning for anything below the recommended minimum
+function sizeCheck(o, pw) {
+  const box = $('sizeCheck');
+  box.hidden = !valid || o.format === 'QR';
+  if (box.hidden) return;
+  const g = GS1[o.format] || {};
+  const x = +$('barWidth').value || 0.33, barH = +$('height').value || 8;
+  const len = pw / PX_PER_MM - 2 * (+$('marginX').value || 0); // bars only, without quiet zones
+  // Named like the options above. min(s): smallest allowed value once scaled by s
+  // (the 15% rule scales with the symbol)
+  const ts = textSize();
+  const items = [
+    { name: '線寬', unit: 'mm', v: x, min: () => g.xMin || MIN_X },
+    { name: '高度', unit: 'mm', v: barH, min: s => g.hMin || Math.max(MIN_BAR, len * s * 0.15) },
+    ts && { name: '字級', unit: 'pt', v: ts.pt, min: () => ts.minPt }
+  ].filter(Boolean);
+  const tw = targetMm().w;
+  const s = tw ? tw / (pw / PX_PER_MM) : 1; // scale of the exported image
+  const isBad = i => i.v * s < i.min(s) - 1e-6;
+  // Without an output size only a problem is worth showing
+  if (!tw && !items.some(isBad)) { box.hidden = true; return; }
+  const fix = v => +v.toFixed(2);
+  const el = (tag, cls, text) => Object.assign(document.createElement(tag), { className: cls, textContent: text || '' });
+  box.replaceChildren(...items.map(i => {
+    const bad = isBad(i);
+    const col = el('div', 'col-4'), cell = el('div', 'size-cell' + (bad ? ' bad' : ''));
+    const val = el('div', 'size-val', `${fix(i.v * s)} ${i.unit} `);
+    val.appendChild(Object.assign(el('i', bad ? 'bi bi-exclamation-triangle-fill' : 'bi bi-check-circle-fill text-success'),
+      { ariaLabel: bad ? '低於建議' : '符合建議' }));
+    cell.append(el('div', 'text-body-secondary', i.name), val, el('div', 'size-min', `建議 ≥ ${fix(i.min(s))}`));
+    col.appendChild(cell);
+    return col;
+  }));
 }
 
 function go(step) {

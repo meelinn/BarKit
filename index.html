@@ -111,8 +111,9 @@
       </div></section>
 
       <section class="card bk-module" data-tag="STYLE 02"><div class="card-body">
-        <div class="d-flex align-items-center justify-content-between mb-3">
-          <h2 class="h6 fw-semibold mb-0">顯示選項</h2>
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <h2 class="h6 fw-semibold mb-0 me-auto">顯示選項</h2>
+          <button id="gs1Btn" type="button" class="tip btn btn-sm btn-outline-primary" title="套用 GS1 標準尺寸" hidden><i class="bi bi-rulers me-1" aria-hidden="true"></i>標準尺寸</button>
           <button id="resetDisplay" type="button" class="tip btn btn-sm btn-outline-secondary" title="恢復預設" aria-label="恢復預設"><i class="bi bi-arrow-counterclockwise"></i></button>
         </div>
 
@@ -120,10 +121,10 @@
           <div class="small fw-semibold text-body-secondary mb-3">條碼外觀</div>
           <!-- Label sits inside each field (prefix), so every option takes one line -->
           <div class="row g-2">
-            <div class="col-6"><div class="input-group input-group-sm"><label for="barWidth" class="input-group-text opt-label">線寬</label><input id="barWidth" class="form-control px-2" type="number" min="1" max="6" value="2"><span class="input-group-text px-2">px</span></div></div>
-            <div class="col-6"><div class="input-group input-group-sm"><label for="height" class="input-group-text opt-label">高度</label><input id="height" class="form-control px-2" type="number" min="10" max="300" value="100"><span class="input-group-text px-2">px</span></div></div>
-            <div class="col-6"><div class="input-group input-group-sm"><label for="marginY" class="input-group-text opt-label">上下邊距</label><input id="marginY" class="form-control px-2" type="number" min="0" max="100" value="10"><span class="input-group-text px-2">px</span></div></div>
-            <div class="col-6"><div class="input-group input-group-sm"><label for="marginX" class="input-group-text opt-label">左右邊距</label><input id="marginX" class="form-control px-2" type="number" min="0" max="100" value="10"><span class="input-group-text px-2">px</span></div></div>
+            <div class="col-6"><div class="input-group input-group-sm"><label for="barWidth" class="input-group-text opt-label">線寬</label><input id="barWidth" class="form-control px-2" type="number" min="0.1" max="2" step="0.01" value="0.33"><span class="input-group-text px-2">mm</span></div></div>
+            <div class="col-6"><div class="input-group input-group-sm"><label for="height" class="input-group-text opt-label">高度</label><input id="height" class="form-control px-2" type="number" min="2" max="100" step="0.01" value="8"><span class="input-group-text px-2">mm</span></div></div>
+            <div class="col-6"><div class="input-group input-group-sm"><label for="marginY" class="input-group-text opt-label">上下邊距</label><input id="marginY" class="form-control px-2" type="number" min="0" max="30" step="0.1" value="0"><span class="input-group-text px-2">mm</span></div></div>
+            <div class="col-6"><div class="input-group input-group-sm"><label for="marginX" class="input-group-text opt-label">左右邊距</label><input id="marginX" class="form-control px-2" type="number" min="0" max="30" step="0.01" value="3.3"><span class="input-group-text px-2">mm</span></div></div>
           </div>
           <div class="small fw-semibold text-body-secondary mt-4 mb-3">文字</div>
           <div class="row g-2">
@@ -131,14 +132,14 @@
               <div class="input-group input-group-sm">
                 <label for="font" class="input-group-text opt-label">字體</label>
                 <select id="font" class="form-select px-2">
-                  <option value="monospace" selected>等寬</option>
+                  <option value="monospace">等寬</option>
                   <option value="sans-serif">無襯線</option>
-                  <option value="OCR-B">OCR-B</option>
+                  <option value="OCR-B" selected>OCR-B</option>
                 </select>
               </div>
               <div class="form-text" id="fontHint" hidden>GS1 商品條碼標準字型</div>
             </div>
-            <div class="col-6"><div class="input-group input-group-sm"><label for="fontSize" class="input-group-text opt-label">字級</label><input id="fontSize" class="form-control px-2" type="number" min="8" max="48" value="20"><span class="input-group-text px-2">px</span></div></div>
+            <div class="col-6"><div class="input-group input-group-sm"><label for="fontSize" class="input-group-text opt-label">字級</label><input id="fontSize" class="form-control px-2" type="number" min="4" max="36" step="0.5" value="10"><span class="input-group-text px-2">pt</span></div></div>
           </div>
         </div>
 
@@ -156,7 +157,7 @@
                 </select>
               </div>
             </div>
-            <div class="col-6"><div class="input-group input-group-sm"><label for="cellSize" class="input-group-text opt-label">模組</label><input id="cellSize" class="form-control px-2" type="number" min="1" max="20" value="8"><span class="input-group-text px-2">px</span></div></div>
+            <div class="col-6"><div class="input-group input-group-sm"><label for="cellSize" class="input-group-text opt-label">模組</label><input id="cellSize" class="form-control px-2" type="number" min="0.2" max="5" step="0.1" value="1"><span class="input-group-text px-2">mm</span></div></div>
             <div class="col-6"><div class="input-group input-group-sm"><label for="qrMargin" class="input-group-text opt-label">邊距</label><input id="qrMargin" class="form-control px-2" type="number" min="0" max="10" value="4"><span class="input-group-text px-2">格</span></div></div>
           </div>
         </div>
@@ -172,12 +173,11 @@
         </div>
 
         <div class="d-flex align-items-center gap-2 mt-4 mb-3">
-          <span class="small fw-semibold text-body-secondary me-auto">輸出尺寸</span>
-          <select id="sizeUnit" class="form-select form-select-sm py-0 w-auto" aria-label="尺寸單位" title="px 為畫面像素，1 px = 1/96 英寸，與顯示選項同單位">
-            <option value="mm">mm</option>
-            <option value="px" selected>px</option>
+          <span class="small fw-semibold text-body-secondary me-auto">輸出尺寸<i class="tip bi bi-info-circle ms-1" tabindex="0" role="img" aria-label="輸出尺寸說明" title="填入後可檢查線寬、高度、字級是否符合規範"></i></span>
+          <select id="sizeUnit" class="form-select form-select-sm py-0 w-auto" aria-label="尺寸單位" title="px 為畫面像素，1 px = 1/96 英寸">
+            <option value="mm" selected>mm</option>
+            <option value="px">px</option>
           </select>
-          <button id="gs1Btn" type="button" class="btn btn-sm btn-outline-primary py-0" title="套用 GS1 100% 標準尺寸，最細線寬 0.33 mm" hidden>GS1 標準</button>
           <button id="sizeClear" type="button" class="tip btn btn-sm btn-outline-secondary py-0" title="恢復預設尺寸" aria-label="恢復預設尺寸" hidden><i class="bi bi-arrow-counterclockwise"></i></button>
         </div>
         <div class="d-flex align-items-center gap-1">
@@ -193,6 +193,7 @@
             <span class="input-group-text px-2 unit-label">px</span>
           </div>
         </div>
+        <div class="row g-2 mt-0 small" id="sizeCheck" aria-live="polite" hidden></div>
       </div></section>
       </div>
     </div>
@@ -201,7 +202,7 @@
     <div class="col-lg-7 col-xl-8 order-1 order-lg-2">
       <!-- Output card + mascot strip below it (sticky together on desktop) -->
       <div class="preview-col d-flex flex-column gap-2">
-      <div class="card preview-card bk-module" data-tag="OUTPUT 03"><div class="card-body d-flex flex-column gap-3">
+      <div class="card preview-card bk-module" data-tag="OUTPUT 03"><div class="card-body d-flex flex-column gap-3 py-4">
         <h1 class="visually-hidden">條碼產生器</h1>
         <div id="topBar" class="d-flex align-items-center gap-2">
         <div id="viewBar" hidden>
@@ -319,8 +320,12 @@
         </div>
       </div></div>
       <!-- Mascot strip outside the output card: works at the computer → sticks the label on a box → naps (decorative) -->
-      <img class="bk-strip d-block w-100 h-auto flex-shrink-0" data-pal="pom-pixel" data-holiday src="img/pom-pixel.svg" alt="" width="1344" height="72">
+      <img class="bk-strip d-none d-lg-block w-100 h-auto flex-shrink-0" data-pal="pom-pixel" data-holiday src="img/pom-pixel.svg" alt="" width="1344" height="72">
       </div>
+    </div>
+    <!-- Phones/tablets: the mascot strip goes at the very bottom of the page instead -->
+    <div class="col-12 order-3 d-lg-none">
+      <img class="bk-strip d-block w-100 h-auto" data-pal="pom-pixel" data-holiday src="img/pom-pixel.svg" alt="" width="1344" height="72">
     </div>
   </div>
 </div>

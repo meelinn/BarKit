@@ -1,6 +1,10 @@
 // Shared helpers and the list of saved fields
 const $ = id => document.getElementById(id);
 const out = $('out');
+// Display options are entered in mm / pt; drawing works in CSS px (1/96 inch)
+const PX_PER_MM = 96 / 25.4, PX_PER_PT = 96 / 72;
+const mmPx = (id, d = 0) => (+$(id).value || d) * PX_PER_MM;
+const ptPx = (id, d = 0) => (+$(id).value || d) * PX_PER_PT;
 
 // OCR-B font from fonts/ocrb.js (base64, so it works over file:// too)
 const OCRB_FACE = window.OCRB_BASE64

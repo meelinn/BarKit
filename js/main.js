@@ -70,24 +70,19 @@ $('resetDisplay').onclick = () => {
   render();
 };
 
-// GS1 100% size: narrowest bar 0.33 mm, nominal bar height, quiet zones per spec.
-// Margins/height are set in px relative to the line width, then the output width is
-// chosen so one line-width px becomes exactly 0.33 mm.
+// GS1 size: recommended narrowest bar, nominal bar height, quiet zones per spec.
+// Options are in mm, so the natural size is already exact: clear any output size.
 $('gs1Btn').onclick = () => {
   const g = GS1[opts().format];
   if (!g) return;
-  const bw = +$('barWidth').value || 2;
-  $('height').value = Math.round(g.barH / GS1_X * bw);
-  $('marginX').value = g.margin * bw;
-  render();
-  const w = parseFloat(out.getAttribute('width'));
-  if (!w) return;
-  $('imgW').value = isPx() ? fmtSize(mmToUnit(w / bw * GS1_X)) : (w / bw * GS1_X).toFixed(2);
+  $('barWidth').value = g.x;
+  $('height').value = g.barH;
+  $('marginX').value = +(g.margin * g.x).toFixed(2);
+  $('imgW').value = $('imgH').value = '';
   sizeSide = 'imgW';
   render();
-  const u = $('sizeUnit').value;
-  flash($('gs1Btn'), '已套用', true, `已套用 GS1 標準：條碼高度 ${$('height').value} px、左右邊距 ${$('marginX').value} px、` +
-        `輸出 ${$('imgW').value} × ${$('imgH').value} ${u}`);
+  flash($('gs1Btn'), '已套用', true, `已套用 GS1 標準：線寬 ${g.x} mm、條碼高度 ${g.barH} mm、` +
+        `左右邊距 ${$('marginX').value} mm`);
 };
 
 // Jump to the first other item with an error
@@ -269,6 +264,7 @@ CONTENT_IDS.forEach(id => $(id).addEventListener('input', () => {
   el.value = clean;
   el.setSelectionRange(caret, caret);
 }));
+
 fields.forEach(id => $(id).addEventListener('input', render));
 load();
 if (!$('imgW').value && $('imgH').value) sizeSide = 'imgH';

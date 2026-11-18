@@ -12,7 +12,7 @@ function svgString(sized = false, src = out) {
 }
 
 // Target image size in mm (either side may be blank = auto)
-// Size units: mm, or px = CSS px (1/96 inch, same unit as the display options)
+// Size units: mm, or px = CSS px (1/96 inch)
 const MM_PER_PX = 25.4 / 96;
 const isPx = () => $('sizeUnit').value === 'px';
 const pxToUnit = px => isPx() ? px : px * MM_PER_PX;
@@ -49,7 +49,7 @@ function fitSvg(inner) {
 // PNG at the chosen DPI. One CSS px = 1/96 inch; the narrowest bar (or QR cell)
 // is rounded to whole printer dots so every bar prints at the same width.
 function moduleSize() {
-  return opts().format === 'QR' ? (+$('cellSize').value || 8) : (+$('barWidth').value || 2);
+  return opts().format === 'QR' ? mmPx('cellSize', 1) : mmPx('barWidth', 0.33);
 }
 
 async function renderCanvas(k, value, svgEl) {

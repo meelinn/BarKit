@@ -10,16 +10,25 @@ function save() {
 function saveNow() {
   clearTimeout(saveTimer);
   try {
-    const data = {};
+    const data = { v: 2 };
     fields.forEach(id => data[id] = isToggle($(id)) ? $(id).checked : $(id).value);
     localStorage.setItem(KEY, JSON.stringify(data));
   } catch {}
 }
 window.addEventListener('pagehide', saveNow);
 document.addEventListener('visibilitychange', () => { if (document.hidden) saveNow(); });
+// Settings saved before v2 hold sizes in px: convert to mm / pt
+function migratePx(data) {
+  const conv = (id, k, digits) => {
+    if (data[id] !== undefined && data[id] !== '' && isFinite(data[id])) data[id] = String(+(data[id] * k).toFixed(digits));
+  };
+  ['barWidth', 'height', 'marginY', 'marginX', 'cellSize'].forEach(id => conv(id, 1 / PX_PER_MM, 2));
+  conv('fontSize', 1 / PX_PER_PT, 1);
+}
 function load() {
   try {
     const data = JSON.parse(localStorage.getItem(KEY)) || {};
+    if (!data.v) migratePx(data);
     fields.forEach(id => {
       if (!(id in data)) return;
       const el = $(id);
