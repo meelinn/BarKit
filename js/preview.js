@@ -162,7 +162,7 @@ function textMetrics(text) {
   return { height: (m.actualBoundingBoxAscent + m.actualBoundingBoxDescent) / 100, width: m.width / 100,
     ascent: m.actualBoundingBoxAscent / 100 };
 }
-// Text margin (px) for bar width x, so the gap from the bars to the top of the glyphs is the 上距
+// Text margin (px) for bar width x, so the gap from the bars to the top of the glyphs is the 與條碼間距
 // set: JsBarcode puts the baseline one font size below the margin, and the glyphs only reach
 // part of that height (caps and digits leave the top of the em box empty)
 const textMarginPx = x => {
