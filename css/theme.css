@@ -559,6 +559,8 @@ textarea.form-control { line-height: 1.6; }
       var(--bk-paw) 44px 9px / 12px no-repeat;
     opacity: .22; pointer-events: none; }
   .preview-card:has(#gridView:not([hidden]))::after { display: none; }
+  /* Keep the centered download buttons clear of the prints (same room on both sides keeps them centered) */
+  #downloads { padding-inline: 4.5rem; }
   /* Dark mode: the green prints would vanish on the dark card, so lighten them */
   [data-bs-theme="dark"] .preview-card::after { filter: brightness(2); opacity: .25; }
 }
