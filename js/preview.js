@@ -22,7 +22,7 @@ const GS1 = {
 // ≥ 2 mm high (GS1 HRI guideline), bars ≥ 5 mm and ≥ 15% of the symbol length
 // (ISO/IEC 15417 recommendation for hand-held scanning)
 const minX = () => Math.max(2 * 25.4 / (+$('dpi').value || 300), .127);
-const MIN_TEXT = 2, MIN_BAR = 5;
+const MIN_TEXT = 2, MIN_PT = 8, MIN_BAR = 5;   // text: glyphs ≥ 2 mm high (GS1) and ≥ 8 pt
 
 function opts() {
   return {
@@ -152,7 +152,8 @@ const sideMargin = (o, x) => $('marginAuto').checked ? autoMargin(o, x) : mmPx('
 const fontPx = x => {
   if (!$('fontAuto').checked) return ptPx('fontSize');
   const fmt = opts().format, text = lines()[cur] || '0123456789';
-  const m = textMetrics(text), size = Math.max(x / PX_PER_MM / .33 * 10 * PX_PER_PT, MIN_TEXT * PX_PER_MM / m.height * 1.01);
+  const m = textMetrics(text), size = Math.max(x / PX_PER_MM / .33 * 10 * PX_PER_PT,
+    MIN_TEXT * PX_PER_MM / m.height * 1.01, MIN_PT * PX_PER_PT);
   return GS1[fmt] ? size : Math.min(size, modulesOf(fmt, text) * x / m.width * .999);
 };
 // Glyph height and text width per px of font size, in the chosen font
@@ -691,7 +692,7 @@ function render() {
 }
 
 // Printed font size (pt; JsBarcode may cap it for EAN/UPC) and the smallest size whose
-// glyphs are still MIN_TEXT mm high (glyph height / font size differs per font)
+// glyphs are still MIN_TEXT mm high (glyph height / font size differs per font), at least MIN_PT
 const glyphCtx = document.createElement('canvas').getContext('2d');
 function textSize() {
   const t = [...out.querySelectorAll('text')];
@@ -700,7 +701,7 @@ function textSize() {
   glyphCtx.font = t[0].style.font;
   const m = glyphCtx.measureText(t.map(e => e.textContent).join(''));
   const ratio = (m.actualBoundingBoxAscent + m.actualBoundingBoxDescent) / drawn;
-  return { pt: drawn / FINE / PX_PER_PT, minPt: MIN_TEXT * PX_PER_MM / ratio / PX_PER_PT };
+  return { pt: drawn / FINE / PX_PER_PT, minPt: Math.max(MIN_PT, MIN_TEXT * PX_PER_MM / ratio / PX_PER_PT) };
 }
 
 // Under the output size: the printed sizes, with a warning for anything below the recommended minimum
